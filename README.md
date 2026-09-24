@@ -35,7 +35,7 @@ los commits siguientes muestra lo que se desarrolló.
 | `labs/01-llm/config.py` | Lee la configuración del archivo `.env` |
 | `labs/01-llm/fake_llm_client.py` | Cliente falso del reto opcional |
 | `labs/01-llm/test_fake_provider.py` | Pruebas del reto opcional |
-| `labs/01-llm/README.md` | Enunciado original del laboratorio |
+| `labs/01-llm/README.md` | Resumen del laboratorio y resultado de las pruebas |
 
 ## Cómo ejecutarlo
 

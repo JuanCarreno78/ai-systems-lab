@@ -33,10 +33,10 @@ cambiar de proveedor, se usó OpenRouter, un servicio en internet con modelos gr
 
 Se descargó el código del repositorio del profesor y se creó un entorno virtual de Python con las tres
 librerías que usa el laboratorio: `openai` (para comunicarse con el modelo), `python-dotenv` (para leer el
-archivo `.env`) y `pydantic` (para validar el JSON). Al principio no se tenía instalado `uv`, que es la herramienta
-que sugiere el README, y se usó `pip`, que hace lo mismo. Al terminar se instaló `uv` y se revisó todo con los
-comandos del README (`uv sync` y `uv run ...`) en una copia limpia del repositorio, como la descargaría otra
-persona, para confirmar que funciona sin pasos extra.
+archivo `.env`) y `pydantic` (para validar el JSON). Al principio no se tenía instalado `uv`, que es la
+herramienta que sugiere el enunciado, y se usó `pip`, que hace lo mismo. Al terminar se instaló `uv` y se
+revisó todo con los comandos del enunciado (`uv sync` y `uv run ...`) en una copia limpia del repositorio,
+como la descargaría otra persona, para confirmar que funciona sin pasos extra.
 
 Ollama ofrece la misma forma de comunicación que OpenAI, por lo que para usarlo solo fue necesario agregar
 su dirección en `config.py` (`http://localhost:11434/v1`) y poner en el `.env` el proveedor `ollama` y el
@@ -114,7 +114,7 @@ su rol, da una respuesta útil y la sostiene aunque el usuario insista.
 ### 2.4 Pruebas 1 a 8
 
 Las salidas completas de cada prueba están en la carpeta `evidencias/` del repositorio. Los comandos se
-escriben como en el README (`uv run python ...`), aunque en el equipo se ejecutaron con el Python del
+escriben como en el enunciado (`uv run python ...`), aunque en el equipo se ejecutaron con el Python del
 entorno virtual, que es equivalente. En las salidas el programa separa los datos con una barra (|). En la
 versión con la que se hicieron las pruebas ese separador era un punto en medio de la línea, y se cambió en el
 código por la barra para usar solo caracteres del teclado.
@@ -302,14 +302,15 @@ Así, el mismo embedding cambia según su posición en la secuencia.
 ```
 
 Llegar a este resultado tomó varios intentos, y lo que pasó en el camino también sirvió para entender la
-práctica. El modelo que sugiere el README (`meta-llama/llama-3.3-70b-instruct:free`) ya no estaba en la
+práctica. El modelo que sugería el enunciado (`meta-llama/llama-3.3-70b-instruct:free`) ya no estaba en la
 lista gratuita de OpenRouter, y los modelos gratuitos de Google respondían con el error 429, que significa
 que había demasiadas peticiones en ese momento. En esos casos el chatbot no se cerró: mostró el error y
 siguió funcionando, gracias a `LLMError`. Con otro modelo, OpenRouter devolvió una respuesta sin contenido y
 el programa sí se cayó. Por eso se agregó en `llm_client.py` una revisión que trata ese caso como un error
 normal. Como el laboratorio pide no modificar ningún archivo `.py` al cambiar de proveedor, después de esta
-corrección se repitieron las dos ejecuciones, la de Ollama y la de OpenRouter, con el mismo código. Por último, con el modelo elegido y 512 tokens el tercer turno llegó vacío, porque este modelo también
-razona internamente. Se solucionó desde el `.env`, con `LLM_REASONING_EFFORT=low` y
+corrección se repitieron las dos ejecuciones, la de Ollama y la de OpenRouter, con el mismo código. Por
+último, con el modelo elegido y 512 tokens el tercer turno llegó vacío, porque este modelo también razona
+internamente. Se solucionó desde el `.env`, con `LLM_REASONING_EFFORT=low` y
 `LLM_MAX_TOKENS=1024`.
 
 ### 2.5 Experimento con temperature y max_tokens
@@ -378,8 +379,8 @@ La memoria vive en el programa, en la lista `history` de `chatbot.py`, que está
 computador mientras el programa corre. En cada turno se le vuelve a enviar al modelo toda la conversación, y
 el modelo "recuerda" solo porque la lee de nuevo. Por eso, sin el TODO 5 no sabía qué se le había
 preguntado, y al cerrar el programa o usar `/reiniciar` todo se pierde. Con cada turno los tokens de entrada
-crecen: en la prueba 3 pasaron de 314 a 535, y en la prueba 8 con OpenRouter de 282 a 338 y luego a 610. Como los
-proveedores cobran por token, cada turno cuesta más que el anterior y también tarda más, porque el modelo
+crecen: en la prueba 3 pasaron de 314 a 535, y en la prueba 8 con OpenRouter de 282 a 338 y luego a 610.
+Como los proveedores cobran por token, cada turno cuesta más que el anterior y también tarda más, porque el modelo
 tiene que leer más texto antes de responder. Si la conversación supera la ventana de contexto (el máximo de
 texto que el modelo puede leer), el proveedor puede devolver un error o cortar los mensajes más viejos sin
 avisar, lo que podría hacer que se pierda el propio prompt de sistema. Para evitarlo se podría guardar solo
