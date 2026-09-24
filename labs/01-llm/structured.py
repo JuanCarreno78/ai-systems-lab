@@ -64,7 +64,7 @@ def main() -> None:
 
     # Ya es un objeto de Python: el programa puede tomar decisiones con él.
     if analysis.requiere_documentos_del_curso:
-        print("\n→ Esta pregunta necesitaría documentos del curso para responderse bien.")
+        print("\n-> Esta pregunta necesitaría documentos del curso para responderse bien.")
 
 
 if __name__ == "__main__":

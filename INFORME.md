@@ -115,7 +115,9 @@ su rol, da una respuesta útil y la sostiene aunque el usuario insista.
 
 Las salidas completas de cada prueba están en la carpeta `evidencias/` del repositorio. Los comandos se
 escriben como en el README (`uv run python ...`), aunque en el equipo se ejecutaron con el Python del
-entorno virtual, que es equivalente.
+entorno virtual, que es equivalente. En las salidas el programa separa los datos con una barra (|). En la
+versión con la que se hicieron las pruebas ese separador era un punto en medio de la línea, y se cambió en el
+código por la barra para usar solo caracteres del teclado.
 
 **Prueba 1. Llamada básica.** Se ejecutó `llm_client.py` y se imprimió un `LLMResponse` con
 `finish_reason='stop'` (el modelo terminó por sí mismo) y tokens mayores que cero:
@@ -142,7 +144,7 @@ modelo y los tokens usados. Salida obtenida:
 
 ```text
 > uv run python labs/01-llm/chatbot.py --debug
-Asistente del Curso de IA  (ollama · qwen3:8b)
+Asistente del Curso de IA  (ollama | qwen3:8b)
 Comandos: /reiniciar  /salir
 
 Tú: Explica qué es el positional encoding
@@ -157,7 +159,7 @@ Transformer para incorporar información sobre la **posición** de las palabras 
 el mecanismo de atención no tiene una noción intrínseca de orden, el positional encoding permite al
 modelo entender la relación espacial entre las palabras. (...)
 
-[finish_reason=stop · tokens entrada=314 salida=206]
+[finish_reason=stop | tokens entrada=314 salida=206]
 
 Tú: Dame un ejemplo de eso
 
@@ -173,7 +175,7 @@ positional encoding se aplica a las **word embeddings** para indicar la posició
 oración. Por ejemplo, en la frase *"El gato duerme en el sofá"*, el modelo debe entender que "el" en la
 posición 1 no tiene la misma relación semántica que "el" en la posición 5. (...)
 
-[finish_reason=stop · tokens entrada=535 salida=252]
+[finish_reason=stop | tokens entrada=535 salida=252]
 
 Tú: /reiniciar
 (historial borrado)
@@ -189,7 +191,7 @@ Asistente: Claro. Imagina que un estudiante pregunta: *"¿Cuándo se entrega el 
 qué temas cubre?"*. En este caso, (...) **no puedo confirmar** porque no tengo acceso al cronograma del
 curso. (...)
 
-[finish_reason=stop · tokens entrada=313 salida=145]
+[finish_reason=stop | tokens entrada=313 salida=145]
 ```
 
 La segunda respuesta sí se refiere al positional encoding, porque el historial se envió junto con la
@@ -207,7 +209,7 @@ self-attention multi-cabeza, capas feed-forward, normalización y el decoder.
 Asistente: La arquitectura Transformer se compone de dos bloques principales: el **encoder** y el
 **decoder**, ambos basados en bloques
 
-[finish_reason=length · tokens entrada=345 salida=30]
+[finish_reason=length | tokens entrada=345 salida=30]
 ```
 
 **Prueba 5. Respuesta estructurada, conocimiento general.** El JSON pasó la validación con
@@ -238,7 +240,7 @@ Objeto validado:
   "respuesta_corta": "No tengo esa información"
 }
 
-→ Esta pregunta necesitaría documentos del curso para responderse bien.
+-> Esta pregunta necesitaría documentos del curso para responderse bien.
 ```
 
 **Prueba 7. Configuración ausente.** Se dejó vacío `LLM_API_KEY` en el `.env`. El programa mostró un
@@ -273,12 +275,12 @@ Con los dos proveedores el chatbot funcionó igual. Resumen de las respuestas:
 Parte de la salida con OpenRouter:
 
 ```text
-Asistente del Curso de IA  (openrouter · nex-agi/nex-n2.5-pro:free)
+Asistente del Curso de IA  (openrouter | nex-agi/nex-n2.5-pro:free)
 
 Tú: ¿Cuándo es el primer parcial?
 Asistente: No tengo acceso al cronograma ni a las fechas de parciales del curso. Consulta el programa,
 la plataforma del curso o al profesor para confirmar cuándo será el primer parcial.
-[finish_reason=stop · tokens entrada=282 salida=65]
+[finish_reason=stop | tokens entrada=282 salida=65]
 
 Tú: Dame un ejemplo de eso
 --- Mensajes enviados al LLM ---
@@ -291,12 +293,12 @@ Tú: Dame un ejemplo de eso
 --------------------------------
 Asistente: Ejemplo con dimensión d=4. Para las posiciones t=0 y t=1:
 PE(0) = [0, 1, 0, 1]
-PE(1) = [sin(1), cos(1), sin(0.01), cos(0.01)] ≈ [0.8415, 0.5403, 0.0100, 1.0000]
+PE(1) = [sin(1), cos(1), sin(0.01), cos(0.01)] = aprox. [0.8415, 0.5403, 0.0100, 1.0000]
 Si un token tiene embedding x = [0.2, -0.1, 0.4, 0.3], su representación codificada será:
 - Posición 0: x + PE(0) = [0.2, 0.9, 0.4, 1.3]
-- Posición 1: x + PE(1) ≈ [1.0415, 0.4403, 0.4100, 1.3000]
+- Posición 1: x + PE(1) = aprox. [1.0415, 0.4403, 0.4100, 1.3000]
 Así, el mismo embedding cambia según su posición en la secuencia.
-[finish_reason=stop · tokens entrada=610 salida=816]
+[finish_reason=stop | tokens entrada=610 salida=816]
 ```
 
 Llegar a este resultado tomó varios intentos, y lo que pasó en el camino también sirvió para entender la
@@ -464,7 +466,8 @@ más grande no ayuda, porque más tamaño significa más conocimiento general, n
 vio. Si respondiera, solo podría inventar una fecha que suene bien. Para que pudiera responder haría falta
 agregar un componente que busque la información en los documentos del curso (programa, cronograma) y se la
 envíe al modelo junto con la pregunta. Esto se conoce como RAG (generación aumentada por recuperación). El
-chatbot pasaría de ser usuario → modelo a usuario → buscador de documentos → modelo, y el campo
+chatbot ya no le pasaría la pregunta directo al modelo, sino que primero buscaría en los documentos y
+después le enviaría al modelo la pregunta junto con lo encontrado. El campo
 `requiere_documentos_del_curso` de `structured.py` podría servir para decidir cuándo hacer esa búsqueda.
 
 ## 4. Referencias
@@ -482,6 +485,6 @@ Pydantic. (s. f.). Pydantic documentation. https://docs.pydantic.dev/latest/
 
 pytest. (s. f.). pytest documentation. https://docs.pytest.org/
 
-Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł. y Polosukhin, I.
+Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L. y Polosukhin, I.
 (2017). Attention is all you need. Advances in Neural Information Processing Systems, 30.
 https://arxiv.org/abs/1706.03762

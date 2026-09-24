@@ -1,4 +1,4 @@
-"""Interfaz de línea de comandos del asistente (Versión 1: Usuario → LLM).
+"""Interfaz de línea de comandos del asistente (Versión 1: Usuario -> LLM).
 
 Uso:
     uv run python labs/01-llm/chatbot.py [--debug]
@@ -29,7 +29,7 @@ def main() -> None:
     client = create_client(settings)
     history: list[Message] = []
 
-    print(f"Asistente del Curso de IA  ({settings.provider} · {settings.model})")
+    print(f"Asistente del Curso de IA  ({settings.provider} | {settings.model})")
     print("Comandos: /reiniciar  /salir\n")
 
     while True:
@@ -61,7 +61,7 @@ def main() -> None:
         print(f"\nAsistente: {response.text}\n")
         if debug:
             print(
-                f"[finish_reason={response.finish_reason} · "
+                f"[finish_reason={response.finish_reason} | "
                 f"tokens entrada={response.prompt_tokens} salida={response.completion_tokens}]\n"
             )
 
