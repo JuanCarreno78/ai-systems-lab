@@ -6,10 +6,7 @@ como cualquier otro código.
 
 from llm_client import Message
 
-# TODO 4: diseña el prompt de sistema del asistente. Como mínimo debe:
-#   - definir el rol (asistente del curso de IA) y el idioma de respuesta;
-#   - indicar el nivel de los estudiantes (ya conocen Transformers);
-#   - prohibir inventar información específica del curso (fechas, notas, programa).
+# TODO 4 (resuelto): rol e idioma, nivel de los estudiantes y prohibición de inventar datos del curso.
 SYSTEM_PROMPT = """Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligencia Artificial".
 Responde siempre en español, con un tono claro y cercano.
 
@@ -39,7 +36,7 @@ escribe "No tengo esa información"."""
 
 def build_messages(history: list[Message], user_input: str) -> list[Message]:
     """Construye lo que realmente recibe el LLM: system + historial + pregunta actual."""
-    # TODO 3: system → historial → pregunta actual.
+    # TODO 3 (resuelto): system, historial y pregunta actual, en ese orden.
     return [
         {"role": "system", "content": SYSTEM_PROMPT},
         *history,

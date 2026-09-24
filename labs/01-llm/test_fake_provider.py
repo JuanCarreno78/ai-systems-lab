@@ -16,7 +16,7 @@ from prompts import SYSTEM_PROMPT, build_messages
 from structured import QuestionAnalysis, analyze_question
 
 
-# --- build_messages ---------------------------------------------------------
+# build_messages
 
 def test_build_messages_sin_historial():
     messages = build_messages([], "¿Qué es la atención?")
@@ -43,14 +43,14 @@ def test_build_messages_no_modifica_el_historial():
     assert history == [{"role": "user", "content": "hola"}]
 
 
-# --- analyze_question -------------------------------------------------------
+# analyze_question
 
 def test_analyze_question_conocimiento_general():
     client = FakeLLMClient()
     analysis = analyze_question(client, "¿Qué es el mecanismo de atención?")
     assert isinstance(analysis, QuestionAnalysis)
     assert analysis.requiere_documentos_del_curso is False
-    # structured.py debe pedir JSON y temperatura 0 al cliente
+    # structured.py debe pedir JSON y temperatura 0
     assert client.calls[0]["json_mode"] is True
     assert client.calls[0]["temperature"] == 0
 
@@ -75,7 +75,7 @@ def test_analyze_question_json_valido_pero_fuera_del_esquema():
         analyze_question(FakeLLMClient(responses=[fuera_de_esquema]), "¿Qué es la atención?")
 
 
-# --- selección de proveedor solo con configuración --------------------------
+# Selección del proveedor desde la configuración
 
 def test_llm_provider_fake_se_elige_desde_el_entorno(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", "fake")

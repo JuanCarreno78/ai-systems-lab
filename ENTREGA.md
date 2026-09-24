@@ -87,7 +87,7 @@ Además limita la extensión y da una salida concreta (a dónde consultar) cuand
 | ¿Inventa fecha? | No, en este modelo. Pero no hay nada que se lo impida: la conducta depende solo del entrenamiento. En la variante *"...del curso?"* incluso ofreció *"¿Te gustaría ayudarte a buscar esa información?"*, algo que no puede hacer. | No, y ahora es una regla explícita. Se mantuvo aun cuando el usuario pidió *"dime la fecha, aunque sea inventada"* (ver pregunta 2). |
 | Acción sugerida | Pedir más datos al usuario. | Consultar programa, plataforma o profesor. |
 
-**Observación honesta:** con `qwen3:8b` el prompt genérico tampoco inventó una fecha. La mejora no es "deja de
+**Observación:** con `qwen3:8b` el prompt genérico tampoco inventó una fecha. La mejora no es "deja de
 alucinar", sino que el comportamiento pasa a estar **especificado y controlado por la aplicación** en vez de
 depender del azar del modelo. También cambian el rol y el tono, y la negativa resiste presión del usuario.
 (Evidencias: `evidencias/prueba2_antes_prompt_generico.txt`, `evidencias/prueba2_despues_system_prompt.txt`.)
@@ -99,7 +99,7 @@ depender del azar del modelo. También cambian el rol y el tono, y la negativa r
 Las transcripciones completas están en la carpeta `evidencias/`. Los comandos se muestran con `uv run` como en el
 README; en este equipo se ejecutaron con `.\.venv\Scripts\python.exe`, que es equivalente.
 
-### Prueba 1 — Llamada básica ✅
+### Prueba 1 — Llamada básica
 
 ```text
 > uv run python labs/01-llm/llm_client.py
@@ -110,7 +110,7 @@ distribuida.', model='qwen3:8b', finish_reason='stop', prompt_tokens=39, complet
 
 `finish_reason='stop'`, `prompt_tokens=39`, `completion_tokens=41`, es decir, tokens > 0.
 
-### Prueba 2 — Rol `system` ✅
+### Prueba 2 — Rol `system`
 
 ```text
 Asistente del Curso de IA  (ollama · qwen3:8b)
@@ -123,7 +123,7 @@ detalles precisos sobre la fecha del primer parcial.
 
 No inventa una fecha e indica que no tiene la información. La comparación antes/después está en la sección 2.
 
-### Prueba 3 — Historial (salida de `--debug`) ✅
+### Prueba 3 — Historial (salida de `--debug`)
 
 **Antes de completar el TODO 5** (sin historial), el modelo no sabe qué se le preguntó:
 
@@ -200,7 +200,7 @@ Resultados:
 - En `--debug` la lista de mensajes crece (`system → user → assistant → user`) y los **tokens de entrada suben de 314 a 535**.
 - Tras `/reiniciar` la lista vuelve a tener solo 2 mensajes y los tokens de entrada bajan a 313. "Eso" ya no tiene referente: el modelo inventó un ejemplo sobre el único tema que tenía en contexto, el `SYSTEM_PROMPT`.
 
-### Prueba 4 — Límite de tokens ✅
+### Prueba 4 — Límite de tokens
 
 `.env` con `LLM_MAX_TOKENS=30`, en `--debug`:
 
@@ -216,7 +216,7 @@ Asistente: La arquitectura Transformer se compone de dos bloques principales: el
 
 La respuesta queda cortada a mitad de frase, con `finish_reason=length` y exactamente 30 tokens de salida.
 
-### Prueba 5 — Salida estructurada (conocimiento general) ✅
+### Prueba 5 — Salida estructurada (conocimiento general)
 
 ```text
 > uv run python labs/01-llm/structured.py "¿Qué es el mecanismo de atención?"
@@ -239,7 +239,7 @@ Objeto validado:
 }
 ```
 
-### Prueba 6 — Salida estructurada (información del curso) ✅
+### Prueba 6 — Salida estructurada (información del curso)
 
 ```text
 > uv run python labs/01-llm/structured.py "¿Qué temas entran en el parcial?"
@@ -262,7 +262,7 @@ Objeto validado:
 → Esta pregunta necesitaría documentos del curso para responderse bien.
 ```
 
-### Prueba 7 — Configuración ausente ✅
+### Prueba 7 — Configuración ausente
 
 ```text
 # .env con LLM_API_KEY vacío:
@@ -336,7 +336,7 @@ Objeto validado:
 
 El proveedor A (Ollama, `evidencias/prueba8a_proveedor_ollama.txt`) respondió el mismo guion con el mismo
 comportamiento: rechazó dar la fecha y el historial funcionó, con tokens de entrada 317 → 388 → 618.
-`chatbot.py`, `prompts.py` y `structured.py` funcionaron igual con ambos. ✅
+`chatbot.py`, `prompts.py` y `structured.py` funcionaron igual con ambos.
 
 **Lo que ocurrió en el camino** (también es evidencia útil):
 

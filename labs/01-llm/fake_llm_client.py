@@ -1,7 +1,6 @@
-"""Proveedor falso (reto opcional): mismo contrato que LLMClient, sin llamar a ninguna API.
+"""Proveedor falso (reto opcional): mismo método chat que LLMClient, sin llamar a ninguna API.
 
-Se selecciona con LLM_PROVIDER=fake en el .env. Sirve para pruebas automáticas
-(rápidas, gratuitas y deterministas) y para trabajar sin conexión.
+Se activa con LLM_PROVIDER=fake. Se usa en las pruebas de test_fake_provider.py.
 """
 
 import json
@@ -16,8 +15,8 @@ COURSE_KEYWORDS = ("parcial", "examen", "nota", "fecha", "entrega", "programa", 
 class FakeLLMClient:
     def __init__(self, settings: Settings | None = None, responses: list[str] | None = None):
         self.settings = settings
-        self._responses = list(responses or [])  # respuestas predefinidas, en orden
-        self.calls: list[dict] = []  # lo que "recibió el modelo", para inspeccionarlo en pruebas
+        self._responses = list(responses or [])  # respuestas fijas, en orden
+        self.calls: list[dict] = []  # peticiones recibidas, para revisarlas en las pruebas
 
     def chat(
         self,

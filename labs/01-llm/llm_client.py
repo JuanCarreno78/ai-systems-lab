@@ -40,7 +40,7 @@ class LLMClient:
         max_tokens: int | None = None,
         json_mode: bool = False,
     ) -> LLMResponse:
-        # TODO 1: llamada a la API de Chat Completions.
+        # TODO 1 (resuelto): llamada a Chat Completions. Sin temperature/max_tokens se usan los del .env.
         params = {
             "model": self.settings.model,
             "messages": messages,
@@ -49,23 +49,22 @@ class LLMClient:
         }
         if json_mode:
             params["response_format"] = {"type": "json_object"}
-        # Solo para modelos de razonamiento (p. ej. qwen3 en Ollama): "none" desactiva
-        # el "pensamiento" para que no consuma los max_tokens de la respuesta.
+        # Modelos de razonamiento: sin esto, el razonamiento interno puede agotar max_tokens.
         if self.settings.reasoning_effort:
             params["reasoning_effort"] = self.settings.reasoning_effort
 
         try:
             completion = self._client.chat.completions.create(**params)
         except openai.APIError as exc:
-            # La aplicación no depende de las excepciones del SDK.
+            # Se traduce a LLMError para que la aplicación no dependa del SDK.
             raise LLMError(f"{type(exc).__name__}: {exc}") from exc
 
-        # Algunos proveedores (p. ej. OpenRouter) responden HTTP 200 con un error y sin choices.
+        # OpenRouter a veces responde HTTP 200 con un error y sin choices.
         if not completion.choices:
             detail = getattr(completion, "error", None) or "respuesta sin 'choices'"
             raise LLMError(f"El proveedor no devolvió una respuesta: {detail}")
 
-        # TODO 2: convertir la respuesta del SDK en un LLMResponse.
+        # TODO 2 (resuelto): respuesta del SDK -> LLMResponse.
         choice = completion.choices[0]
         usage = completion.usage
         return LLMResponse(
@@ -78,7 +77,7 @@ class LLMClient:
 
 
 def create_client(settings: Settings):
-    """Elige la implementación según la configuración. La aplicación solo usa `chat`."""
+    """Devuelve el cliente según LLM_PROVIDER. Con "fake" no se llama a ninguna API."""
     if settings.provider == "fake":
         from fake_llm_client import FakeLLMClient
 
