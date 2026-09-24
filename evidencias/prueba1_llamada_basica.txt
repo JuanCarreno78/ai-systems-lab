@@ -1,0 +1,1 @@
+﻿LLMResponse(text='Un Transformer es un tipo de arquitectura de red neuronal utilizada en el procesamiento del lenguaje natural que permite modelar relaciones entre palabras en una secuencia mediante atención distribuida.', model='qwen3:8b', finish_reason='stop', prompt_tokens=39, completion_tokens=41)

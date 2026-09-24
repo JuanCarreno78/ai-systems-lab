@@ -1,0 +1,8 @@
+﻿Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: ¿Cuándo es el primer parcial?
+
+Asistente: No tengo acceso a la información sobre fechas de parciales o entregas del curso. Te sugiero que consultes el programa del curso, la plataforma del curso o directamente al profesor para obtener detalles precisos sobre la fecha del primer parcial.
+
+

@@ -1,0 +1,54 @@
+﻿######## LLM_TEMPERATURE=0.3  LLM_MAX_TOKENS=30 ########
+Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Explica en detalle cómo funciona la arquitectura Transformer completa: embeddings, positional encoding, self-attention multi-cabeza, capas feed-forward, normalización y el decoder.
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Explica en detalle cómo funciona la arquitectura Transformer completa: embedding
+--------------------------------
+
+Asistente: La arquitectura Transformer se compone de dos bloques principales: el **encoder** y el **decoder**, ambos basados en bloques
+
+[finish_reason=length · tokens entrada=345 salida=30]
+
+
+######## LLM_TEMPERATURE=0.3  LLM_MAX_TOKENS=100 ########
+Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Explica en detalle cómo funciona la arquitectura Transformer completa: embeddings, positional encoding, self-attention multi-cabeza, capas feed-forward, normalización y el decoder.
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Explica en detalle cómo funciona la arquitectura Transformer completa: embedding
+--------------------------------
+
+Asistente: La arquitectura Transformer se compone de un **encoder** y un **decoder**, ambos construidos con bloques idénticos que incluyen **self-attention multi-cabeza** y **capas feed-forward**, acompañados de **normalización** y **mechanismos de conexión**. 
+
+En el **encoder**, las **embeddings** convierten tokens en vectores densos, que luego se suman con **positional encoding** para incorporar
+
+[finish_reason=length · tokens entrada=345 salida=100]
+
+
+######## LLM_TEMPERATURE=0.3  LLM_MAX_TOKENS=512 ########
+Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Explica en detalle cómo funciona la arquitectura Transformer completa: embeddings, positional encoding, self-attention multi-cabeza, capas feed-forward, normalización y el decoder.
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Explica en detalle cómo funciona la arquitectura Transformer completa: embedding
+--------------------------------
+
+Asistente: La arquitectura Transformer se compone de dos bloques principales: el **encoder** y el **decoder**, ambos compuestos por capas idénticas. El proceso comienza con la **embedding** de las palabras, que convierte tokens en vectores densos de dimensión fija. A estos embeddings se les añade el **positional encoding**, que agrega información sobre la posición de cada token en la secuencia, permitiendo al modelo captar relaciones de orden temporal.
+
+En cada capa del encoder, se aplica **self-attention multi-cabeza**, donde múltiples cabezas de atención capturan diferentes aspectos de la relación entre tokens. Esto se logra mediante la multiplicación de matrices de peso, seguida de una suma y una activación. Después, se aplica una capa **feed-forward** (una red neuronal densa) para procesar cada token de forma independiente. Finalmente, se usa **normalización** (Layer Normalization) para estabilizar el entrenamiento.
+
+El **decoder** sigue una estructura similar, pero incluye una atención **masked** para evitar que las posiciones futuras afecten la predicción. Además, el decoder recibe información del encoder mediante una atención cruzada, permitiendo al modelo comprender el contexto global de la secuencia de entrada.
+
+[finish_reason=stop · tokens entrada=345 salida=280]
+
+

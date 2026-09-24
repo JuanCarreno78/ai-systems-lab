@@ -1,0 +1,92 @@
+﻿# .env (proveedor B: openrouter) - la clave se muestra oculta
+LLM_PROVIDER=openrouter
+LLM_API_KEY=***oculta*** (73 caracteres)
+LLM_MODEL=nex-agi/nex-n2.5-pro:free
+LLM_TEMPERATURE=0.3
+LLM_MAX_TOKENS=1024
+LLM_REASONING_EFFORT=low
+
+# Para cambiar de proveedor solo se editó .env (LLM_PROVIDER, LLM_API_KEY, LLM_MODEL, LLM_MAX_TOKENS, LLM_REASONING_EFFORT).
+# Nota: entre la parte A y la B se corrigió el manejo de errores de llm_client.py (respuesta HTTP 200 sin 'choices');
+# ese cambio no es necesario para el cambio de proveedor, solo para que un error del proveedor no tumbe la app.
+
+> uv run python labs/01-llm/chatbot.py --debug
+Asistente del Curso de IA  (openrouter · nex-agi/nex-n2.5-pro:free)
+Comandos: /reiniciar  /salir
+
+Tú: ¿Cuándo es el primer parcial?
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] ¿Cuándo es el primer parcial?
+--------------------------------
+
+Asistente: No tengo acceso a fechas de parciales, entregas o cronogramas del curso. Consulta el programa oficial, la plataforma del curso o al profesor para confirmar cuándo es el primer parcial.
+
+[finish_reason=stop · tokens entrada=282 salida=41]
+
+Tú: Explica qué es el positional encoding
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] ¿Cuándo es el primer parcial?
+[assistant] No tengo acceso a fechas de parciales, entregas o cronogramas del curso. Consult
+[user] Explica qué es el positional encoding
+--------------------------------
+
+Asistente: El **positional encoding** aporta información sobre la posición de cada token, ya que la atención autoatencional por sí sola es esencialmente invariante a permutaciones: sin esta señal, el modelo no podría distinguir órdenes distintos de los mismos tokens. Se suma al embedding léxico:
+
+\[
+\mathbf{x}'_i=\mathbf{x}_i+\mathbf{p}_i
+\]
+
+En el Transformer original, \(\mathbf{p}_i\) usa senos y cosenos de frecuencias geométricamente decrecientes, permitiendo representar posiciones y posibles relaciones relativas. En arquitecturas modernas también son comunes los encodings aprendidos, ALiBi y **RoPE**, este último rotando consultas y claves para codificar distancias relativas directamente en la atención.
+
+[finish_reason=stop · tokens entrada=340 salida=265]
+
+Tú: Dame un ejemplo de eso
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] ¿Cuándo es el primer parcial?
+[assistant] No tengo acceso a fechas de parciales, entregas o cronogramas del curso. Consult
+[user] Explica qué es el positional encoding
+[assistant] El **positional encoding** aporta información sobre la posición de cada token, y
+[user] Dame un ejemplo de eso
+--------------------------------
+
+Asistente: Supón un embedding de dimensión \(d_{model}=4\). Con la fórmula sinusoidal original:
+\[
+PE(pos,2i)=\sin(pos/10000^{2i/d}),\qquad PE(pos,2i+1)=\cos(pos/10000^{2i/d})
+\]
+
+Para las posiciones 0 y 1:
+\[
+PE_0\approx[0,1,0,1],\qquad PE_1\approx[0.8415,0.5403,0.0100,0.99995]
+\]
+Si el primer token tiene embedding \([0.20,-0.10,0.40,0.30]\), su representación final será:
+\[
+[0.20,-0.10,0.40,0.30]+[0,1,0,1]=[0.20,0.90,0.40,1.30]
+\]
+Así, el mismo token recibiría una representación distinta si apareciera en otra posición.
+
+[finish_reason=stop · tokens entrada=525 salida=890]
+
+
+
+> uv run python labs/01-llm/structured.py "¿Qué es el mecanismo de atención?"
+Texto crudo del LLM:
+{
+  "tema": "Mecanismo de atención",
+  "dificultad": "basica",
+  "requiere_documentos_del_curso": false,
+  "respuesta_corta": "Es un mecanismo que permite a un modelo asignar distinta importancia a partes de la información de entrada según su relevancia para la tarea. Así puede centrarse en los elementos más útiles al generar o procesar una respuesta."
+}
+
+Objeto validado:
+{
+  "tema": "Mecanismo de atención",
+  "dificultad": "basica",
+  "requiere_documentos_del_curso": false,
+  "respuesta_corta": "Es un mecanismo que permite a un modelo asignar distinta importancia a partes de la información de entrada según su relevancia para la tarea. Así puede centrarse en los elementos más útiles al generar o procesar una respuesta."
+}

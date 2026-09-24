@@ -1,0 +1,10 @@
+﻿# Pregunta 6: el 'LLM' (FakeLLMClient) devuelve JSON válido pero con dificultad='media'
+
+Texto crudo del LLM:
+{"tema": "atención", "dificultad": "media", "requiere_documentos_del_curso": false, "respuesta_corta": "..."}
+
+[error] El JSON no cumple el esquema:
+1 validation error for QuestionAnalysis
+dificultad
+  Input should be 'basica', 'intermedia' or 'avanzada' [type=literal_error, input_value='media', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.13/v/literal_error

@@ -1,0 +1,76 @@
+﻿# .env (proveedor B: openrouter) - la clave se muestra oculta
+LLM_PROVIDER=openrouter
+LLM_API_KEY=***oculta*** (73 caracteres)
+LLM_MODEL=nex-agi/nex-n2.5-pro:free
+LLM_TEMPERATURE=0.3
+LLM_MAX_TOKENS=512
+LLM_REASONING_EFFORT=
+
+# Archivos .py modificados desde la parte A: ninguno (solo se edito .env)
+
+> uv run python labs/01-llm/chatbot.py --debug
+Asistente del Curso de IA  (openrouter · nex-agi/nex-n2.5-pro:free)
+Comandos: /reiniciar  /salir
+
+Tú: ¿Cuándo es el primer parcial?
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] ¿Cuándo es el primer parcial?
+--------------------------------
+
+Asistente: No tengo acceso al cronograma ni a las fechas de parciales. Consultá el programa de la materia, la plataforma del curso o al profesor.
+<CPA_DONE>
+
+[finish_reason=stop · tokens entrada=282 salida=67]
+
+Tú: Explica qué es el positional encoding
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] ¿Cuándo es el primer parcial?
+[assistant] No tengo acceso al cronograma ni a las fechas de parciales. Consultá el programa
+[user] Explica qué es el positional encoding
+--------------------------------
+
+Asistente: El **positional encoding** aporta información sobre la posición de cada token dentro de la secuencia. Se suma al embedding antes de las capas de atención; sin él, la self-attention sería esencialmente **permutation-equivariant** y trataría la entrada como una bolsa de tokens.
+
+En el Transformer original son señales sinusoidales de distintas frecuencias, lo que permite representar posiciones absolutas y ciertas relaciones relativas. También pueden aprenderse durante el entrenamiento.
+
+Hoy son comunes alternativas como **positional biases relativos** y **RoPE**, que codifican mejor distancias y relaciones entre tokens. En el decoder, la causalidad no la impone el encoding, sino la **máscara causal**.
+
+[finish_reason=stop · tokens entrada=339 salida=383]
+
+Tú: Dame un ejemplo de eso
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] ¿Cuándo es el primer parcial?
+[assistant] No tengo acceso al cronograma ni a las fechas de parciales. Consultá el programa
+[user] Explica qué es el positional encoding
+[assistant] El **positional encoding** aporta información sobre la posición de cada token de
+[user] Dame un ejemplo de eso
+--------------------------------
+
+Asistente: 
+
+[finish_reason=length · tokens entrada=503 salida=512]
+
+
+
+> uv run python labs/01-llm/structured.py "¿Qué es el mecanismo de atención?"
+Texto crudo del LLM:
+{
+  "tema": "Mecanismo de atención",
+  "dificultad": "basica",
+  "requiere_documentos_del_curso": false,
+  "respuesta_corta": "Es un mecanismo que permite a un modelo asignar mayor importancia a las partes relevantes de la información de entrada al generar una salida. En modelos como Transformers, ayuda a captar relaciones entre elementos de una secuencia."
+}
+
+Objeto validado:
+{
+  "tema": "Mecanismo de atención",
+  "dificultad": "basica",
+  "requiere_documentos_del_curso": false,
+  "respuesta_corta": "Es un mecanismo que permite a un modelo asignar mayor importancia a las partes relevantes de la información de entrada al generar una salida. En modelos como Transformers, ayuda a captar relaciones entre elementos de una secuencia."
+}

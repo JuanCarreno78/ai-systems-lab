@@ -1,0 +1,147 @@
+﻿######## LLM_TEMPERATURE=0  LLM_MAX_TOKENS=512 ########
+---- intento 1 ----
+Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Propón un nombre para este asistente
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Propón un nombre para este asistente
+--------------------------------
+
+Asistente: Como asistente del curso "Fundamentos de Inteligencia Artificial", un nombre que refleje tanto la naturaleza técnica del curso como la función de apoyo al aprendizaje podría ser **"AI Tutor"**. Este nombre combina la inteligencia artificial con el rol de tutor, lo cual es coherente con el contexto académico. Alternativamente, podrías considerar **"NeuroTutor"**, para enfatizar la conexión con redes neuronales y la arquitectura Transformer, que son temas clave del curso. Ambos nombres son claros, profesionales y alineados con el contenido del curso.
+
+[finish_reason=stop · tokens entrada=316 salida=135]
+
+
+---- intento 2 ----
+Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Propón un nombre para este asistente
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Propón un nombre para este asistente
+--------------------------------
+
+Asistente: Como asistente del curso "Fundamentos de Inteligencia Artificial", un nombre que refleje tanto la naturaleza técnica del curso como la función de apoyo al aprendizaje podría ser **"AI Tutor"**. Este nombre combina la inteligencia artificial con el rol de tutor, lo cual es coherente con el contexto académico del curso. Alternativamente, podrías considerar **"NeuroTutor"**, para enfatizar la conexión con redes neuronales y la arquitectura Transformer, que son temas clave del curso. Ambos nombres son claros, técnicos y adecuados para un entorno universitario.
+
+[finish_reason=stop · tokens entrada=316 salida=139]
+
+
+---- intento 3 ----
+Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Propón un nombre para este asistente
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Propón un nombre para este asistente
+--------------------------------
+
+Asistente: Como asistente del curso "Fundamentos de Inteligencia Artificial", un nombre que refleje tanto la naturaleza técnica del curso como la función de apoyo al aprendizaje podría ser **"AI Tutor"**. Este nombre combina la inteligencia artificial con el rol de tutor, lo cual es coherente con el contexto académico del curso. Alternativamente, podrías considerar **"NeuroTutor"**, para enfatizar la conexión con redes neuronales y la arquitectura Transformer, que son temas clave del curso. Ambos nombres son claros, técnicos y adecuados para un entorno universitario.
+
+[finish_reason=stop · tokens entrada=316 salida=139]
+
+
+######## LLM_TEMPERATURE=0.7  LLM_MAX_TOKENS=512 ########
+---- intento 1 ----
+Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Propón un nombre para este asistente
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Propón un nombre para este asistente
+--------------------------------
+
+Asistente: Como asistente especializado en "Fundamentos de Inteligencia Artificial", un nombre que refleje tu función y el enfoque del curso podría ser **"AI-Fundamentos"**. Este nombre combina la sigla de Inteligencia Artificial con el énfasis en los fundamentos teóricos y prácticos del área, lo que facilita la identificación de tu rol por parte de los estudiantes. Alternativamente, podrías usar **"Asistente IA"** si prefieres algo más sencillo y directo. Ambos nombres son claros y técnicos, adecuados para un entorno académico.
+
+[finish_reason=stop · tokens entrada=316 salida=139]
+
+
+---- intento 2 ----
+Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Propón un nombre para este asistente
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Propón un nombre para este asistente
+--------------------------------
+
+Asistente: Como asistente especializado en "Fundamentos de Inteligencia Artificial", un nombre que refleje su función y ámbito de conocimiento podría ser **"AI-Fundamentos"**. Este nombre combina la inteligencia artificial con el enfoque en los fundamentos teóricos y conceptuales del área, lo que lo hace claro y profesional. También podrías considerar alternativas como **"AI-Base"** o **"AI-Basecamp"**, para dar un toque más cercano y accesible. ¿Te gustaría que te proponga más opciones?
+
+[finish_reason=stop · tokens entrada=316 salida=124]
+
+
+---- intento 3 ----
+Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Propón un nombre para este asistente
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Propón un nombre para este asistente
+--------------------------------
+
+Asistente: Como asistente del curso "Fundamentos de Inteligencia Artificial", un nombre que refleje la función y el contexto del curso podría ser **"FIA-Asistente"**. Este nombre combina "FIA" (Fundamentos de Inteligencia Artificial) con la identidad de asistente, facilitando la identificación del rol dentro del curso. Alternativamente, podrías usar **"FIA-IA"** para enfatizar la conexión entre el curso y la inteligencia artificial. Ambos nombres son claros, técnicos y alineados con el contenido del curso.
+
+[finish_reason=stop · tokens entrada=316 salida=128]
+
+
+######## LLM_TEMPERATURE=1.2  LLM_MAX_TOKENS=512 ########
+---- intento 1 ----
+Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Propón un nombre para este asistente
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Propón un nombre para este asistente
+--------------------------------
+
+Asistente: ¡Claro! Un nombre adecuado para este asistente podría ser **"AI Tutor"**. Este nombre refleja tanto el enfoque en inteligencia artificial como la función de tutoría y asistencia en el aprendizaje. También podrías considerar alternativas como **"NeuroTutor"** o **"Transformer Tutor"**, que reflejan el conocimiento técnico en redes neuronales y la arquitectura Transformer, típica en cursos de inteligencia artificial. ¿Te gustaría que te proponga más nombres con un enfoque más específico?
+
+[finish_reason=stop · tokens entrada=316 salida=125]
+
+
+---- intento 2 ----
+Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Propón un nombre para este asistente
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Propón un nombre para este asistente
+--------------------------------
+
+Asistente: Como asistente especializado en "Fundamentos de Inteligencia Artificial", un nombre que refleje su propósito y utilidad podría ser **"FAI Assistant"** (Fundamentos de Inteligencia Artificial Assistant). Este nombre es claro, técnico y fácil de recordar, además de estar alineado con el enfoque del curso. Otra opción podría ser **"AI Fundamentos"**, que también transmite el carácter académico y conceptual del rol. Ambos nombres son adecuados para un entorno educativo y técnicamente orientado.
+
+[finish_reason=stop · tokens entrada=316 salida=119]
+
+
+---- intento 3 ----
+Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Propón un nombre para este asistente
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Propón un nombre para este asistente
+--------------------------------
+
+Asistente: Como asistente inteligente del curso "Fundamentos de Inteligencia Artificial", un nombre que refleje la función y el enfoque del curso podría ser **"AI-Fundas"**. Este nombre combina "AI" (Inteligencia Artificial) con "Fundas" como abreviatura de "Fundamentos", lo que sugiere un apoyo técnico y conceptual en el área. También se podría considerar **"NeuroFundas"**, para resaltar la conexión con redes neuronales y los fundamentos teóricos. Ambos nombres son breves, funcionales y en línea con el enfoque del curso.
+
+[finish_reason=stop · tokens entrada=316 salida=137]
+
+

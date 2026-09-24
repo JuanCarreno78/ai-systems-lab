@@ -1,0 +1,39 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Chatbot",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/01-llm/chatbot.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Chatbot --debug",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/01-llm/chatbot.py",
+            "args": ["--debug"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Prueba de humo (llm_client.py)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/01-llm/llm_client.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Salida estructurada (structured.py)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/01-llm/structured.py",
+            "args": ["¿Qué es el mecanismo de atención?"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        }
+    ]
+}

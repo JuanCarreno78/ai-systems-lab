@@ -1,0 +1,13 @@
+﻿# .env con LLM_API_KEY vacío:
+LLM_PROVIDER=ollama
+LLM_API_KEY=
+LLM_MODEL=qwen3:8b
+LLM_TEMPERATURE=0.3
+LLM_MAX_TOKENS=512
+LLM_REASONING_EFFORT=none
+
+> uv run python labs/01-llm/chatbot.py
+[configuración] Falta LLM_API_KEY. Copia .env.example como .env y agrega tu clave.
+
+> uv run python labs/01-llm/structured.py "hola"
+[configuración] Falta LLM_API_KEY. Copia .env.example como .env y agrega tu clave.

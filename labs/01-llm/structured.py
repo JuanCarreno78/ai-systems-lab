@@ -14,7 +14,7 @@ from typing import Literal
 from pydantic import BaseModel, ValidationError
 
 from config import load_settings
-from llm_client import LLMClient, LLMError
+from llm_client import LLMClient, LLMError, create_client
 from prompts import ANALYSIS_PROMPT
 
 
@@ -33,16 +33,15 @@ def analyze_question(client: LLMClient, question: str) -> QuestionAnalysis:
     response = client.chat(messages, temperature=0, json_mode=True)
     print(f"Texto crudo del LLM:\n{response.text}\n")
 
-    # TODO 6: convierte el texto en un QuestionAnalysis en dos pasos separados:
-    #   1. json.loads(...)                     → ¿es JSON válido?
-    #   2. QuestionAnalysis.model_validate(...) → ¿cumple el esquema?
-    raise NotImplementedError("Completa analyze_question")
+    # TODO 6: dos pasos separados, cada uno con su propio tipo de error.
+    data = json.loads(response.text)  # 1. ¿es JSON válido?  → json.JSONDecodeError
+    return QuestionAnalysis.model_validate(data)  # 2. ¿cumple el esquema? → ValidationError
 
 
 def main() -> None:
     question = " ".join(sys.argv[1:]) or input("Pregunta: ")
     try:
-        client = LLMClient(load_settings())
+        client = create_client(load_settings())
     except ValueError as exc:
         print(f"[configuración] {exc}")
         return

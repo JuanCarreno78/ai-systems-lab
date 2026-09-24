@@ -1,0 +1,7 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+    "python.analysis.extraPaths": ["labs/01-llm"],
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestArgs": ["labs/01-llm"],
+    "terminal.integrated.env.windows": { "PYTHONUTF8": "1" }
+}

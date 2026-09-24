@@ -1,0 +1,52 @@
+﻿Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Explica qué es el positional encoding
+
+--- Mensajes enviados al LLM ---
+[system] Eres un asistente útil.
+[user] Explica qué es el positional encoding
+--------------------------------
+
+Asistente: El **positional encoding** es una técnica utilizada en modelos de lenguaje basados en **transformers** (como BERT, GPT, etc.) para incorporar información sobre la **posición** de las palabras en una secuencia. En los modelos de **transformer**, las capas atencionales no tienen una noción intrínseca de la posición de las palabras en una secuencia, a diferencia de los modelos recurrentes (como RNN o LSTM), que procesan la secuencia secuencialmente.
+
+### ¿Por qué es necesario el positional encoding?
+
+En un modelo de **transformer**, cada palabra se representa como un **vector de embeddings**. Sin embargo, estos embeddings no contienen información sobre la **posición** de la palabra en la oración. Por ejemplo, en la frase "El gato come", el modelo no sabe que "gato" está en la segunda posición, a menos que se le indique explícitamente.
+
+El **positional encoding** se encarga de añadir esta información a los embeddings, permitiendo al modelo entender la **relación entre las palabras** en la secuencia.
+
+---
+
+### ¿Cómo funciona el positional encoding?
+
+Existen varias formas de implementar el positional encoding. Una de las más comunes es la **positional encoding sinusoidal**, que se basa en funciones trigonométricas.
+
+#### 1. **Positional encoding sinusoidal** (usada en el modelo original de transformer):
+
+- Cada posición $ i $ (de 0 a $ n-1 $, donde $ n $ es la longitud de la secuencia) se representa mediante un vector de dimensión $ d $ (la dimensión de los embeddings).
+- Para cada dimensión $ j $ del vector, se calcula:
+  $$
+  PE_{(i,j)} = \begin{cases}
+  \sin\left(\frac{i}{10000^{2j/d}}\right) & \text{si } j \text{ es par} \\
+  \cos\left(\frac{i}{10000^{2j/d}}\right) & \text{si } j \text{ es impar}
+  \end{cases}
+  $$
+- Esta fórmula genera un vector de posición que varía con la posición $ i $ y la dimensión $ j $.
+
+#### 2. **Positional encoding aprendible** (usada
+
+[finish_reason=length · tokens entrada=36 salida=512]
+
+Tú: ¿Qué te pregunté antes?
+
+--- Mensajes enviados al LLM ---
+[system] Eres un asistente útil.
+[user] ¿Qué te pregunté antes?
+--------------------------------
+
+Asistente: No tengo acceso a la historia de nuestra conversación anterior. Si tienes alguna pregunta específica o necesitas ayuda con algo, ¡avísame y estaré encantado de ayudarte!
+
+[finish_reason=stop · tokens entrada=37 salida=39]
+
+

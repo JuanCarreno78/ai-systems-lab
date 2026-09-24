@@ -10,7 +10,22 @@ from llm_client import Message
 #   - definir el rol (asistente del curso de IA) y el idioma de respuesta;
 #   - indicar el nivel de los estudiantes (ya conocen Transformers);
 #   - prohibir inventar información específica del curso (fechas, notas, programa).
-SYSTEM_PROMPT = """Eres un asistente útil."""
+SYSTEM_PROMPT = """Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligencia Artificial".
+Responde siempre en español, con un tono claro y cercano.
+
+Tus usuarios son estudiantes que ya conocen redes neuronales y la arquitectura Transformer
+(embeddings, atención, positional encoding, decoder). No expliques lo básico salvo que te lo pidan;
+usa terminología técnica correcta y ejemplos concretos. Sé conciso: máximo 3 párrafos cortos
+o una lista breve, a menos que el estudiante pida más detalle.
+
+Reglas sobre información del curso:
+- NO tienes acceso a los documentos del curso (programa, cronograma, fechas de parciales o entregas,
+  notas, criterios de evaluación, horarios, material propio del profesor).
+- Si te preguntan algo de eso, di explícitamente que no tienes esa información y sugiere consultar
+  el programa del curso, la plataforma del curso o al profesor. NUNCA inventes fechas, notas,
+  porcentajes ni contenidos del programa, ni des una fecha "aproximada" o "típica".
+- Si una pregunta mezcla conocimiento general de IA con información del curso, responde la parte
+  general y aclara qué parte no puedes confirmar."""
 
 ANALYSIS_PROMPT = """Analiza la pregunta de un estudiante del curso de IA.
 Responde ÚNICAMENTE con un objeto JSON con exactamente estas claves:
@@ -24,8 +39,9 @@ escribe "No tengo esa información"."""
 
 def build_messages(history: list[Message], user_input: str) -> list[Message]:
     """Construye lo que realmente recibe el LLM: system + historial + pregunta actual."""
-    # TODO 3: devuelve una lista con, en este orden:
-    #   1. el mensaje de rol "system" con SYSTEM_PROMPT;
-    #   2. todos los mensajes de history;
-    #   3. el mensaje de rol "user" con user_input.
-    raise NotImplementedError("Completa build_messages")
+    # TODO 3: system → historial → pregunta actual.
+    return [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        *history,
+        {"role": "user", "content": user_input},
+    ]

@@ -7,7 +7,7 @@ Uso:
 import sys
 
 from config import load_settings
-from llm_client import LLMClient, LLMError, Message
+from llm_client import LLMError, Message, create_client
 from prompts import build_messages
 
 
@@ -26,7 +26,7 @@ def main() -> None:
     except ValueError as exc:
         print(f"[configuración] {exc}")
         return
-    client = LLMClient(settings)
+    client = create_client(settings)
     history: list[Message] = []
 
     print(f"Asistente del Curso de IA  ({settings.provider} · {settings.model})")
@@ -65,9 +65,9 @@ def main() -> None:
                 f"tokens entrada={response.prompt_tokens} salida={response.completion_tokens}]\n"
             )
 
-        # TODO 5: agrega al historial la pregunta del usuario y la respuesta del asistente
-        #   (con los roles "user" y "assistant"). Primero ejecuta el chatbot SIN este paso
-        #   y pregúntale "¿Qué te pregunté antes?". Luego complétalo y repite la prueba.
+        # TODO 5: la API no tiene estado; la memoria de la conversación vive aquí.
+        history.append({"role": "user", "content": user_input})
+        history.append({"role": "assistant", "content": response.text})
 
 
 if __name__ == "__main__":

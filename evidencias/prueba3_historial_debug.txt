@@ -1,0 +1,55 @@
+﻿Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: Explica qué es el positional encoding
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Explica qué es el positional encoding
+--------------------------------
+
+Asistente: El **positional encoding** es una técnica utilizada en modelos basados en la arquitectura Transformer para incorporar información sobre la **posición** de las palabras en una secuencia. Dado que el mecanismo de atención no tiene una noción intrínseca de orden, el positional encoding permite al modelo entender la relación espacial entre las palabras.
+
+Este encoding se agrega a los **embeddings** de las palabras, generalmente mediante una suma, y se representa como un vector de la misma dimensión que los embeddings. Puede ser implementado de forma **senoidal** o **posicional** (con senos y cosenos), o mediante una **matriz de posiciones** que se aprende durante el entrenamiento.
+
+En modelos como BERT o Transformer, el positional encoding es crucial para capturar la **dependencia secuencial** de los datos, lo que permite tareas como la traducción automática o el procesamiento de lenguaje natural.
+
+[finish_reason=stop · tokens entrada=314 salida=206]
+
+Tú: Dame un ejemplo de eso
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Explica qué es el positional encoding
+[assistant] El **positional encoding** es una técnica utilizada en modelos basados en la arq
+[user] Dame un ejemplo de eso
+--------------------------------
+
+Asistente: Un ejemplo clásico es en el modelo **Transformer original** (Vaswani et al., 2017), donde el positional encoding se aplica a las **word embeddings** para indicar la posición de cada palabra en una oración. Por ejemplo, en la frase *"El gato duerme en el sofá"*, el modelo debe entender que "el" en la posición 1 no tiene la misma relación semántica que "el" en la posición 5.
+
+El positional encoding se calcula usando funciones senoidales de diferentes frecuencias, como:  
+$$ PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d}}\right) $$  
+$$ PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d}}\right) $$  
+donde $ pos $ es la posición en la secuencia y $ i $ es el índice del vector. Esto permite al modelo capturar la **relación de orden** entre las palabras, incluso cuando se usan mecanismos de atención sin conexión secuencial.
+
+[finish_reason=stop · tokens entrada=535 salida=252]
+
+Tú: /reiniciar
+(historial borrado)
+
+Tú: Dame un ejemplo de eso
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] Dame un ejemplo de eso
+--------------------------------
+
+Asistente: Claro. Imagina que un estudiante pregunta: *"¿Cuándo se entrega el segundo parcial del curso y qué temas cubre?"*.  
+
+En este caso, la parte general de la pregunta es sobre la fecha de entrega de un parcial, lo cual **no puedo confirmar** porque no tengo acceso al cronograma del curso. Sin embargo, puedo explicar que, en general, los parciales suelen cubrir temas como redes neuronales, arquitecturas de modelos, atención y entrenamiento de modelos, según el contenido del curso.  
+
+Te sugiero que consultes el programa del curso o el profesor para obtener información precisa sobre fechas y temas específicos.
+
+[finish_reason=stop · tokens entrada=313 salida=145]
+
+

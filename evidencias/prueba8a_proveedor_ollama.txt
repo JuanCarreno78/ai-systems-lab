@@ -1,0 +1,56 @@
+﻿# .env (proveedor A: ollama)
+LLM_PROVIDER=ollama
+LLM_API_KEY=***oculta*** (6 caracteres)
+LLM_MODEL=qwen3:8b
+LLM_TEMPERATURE=0.3
+LLM_MAX_TOKENS=512
+LLM_REASONING_EFFORT=none
+
+> uv run python labs/01-llm/chatbot.py --debug
+Asistente del Curso de IA  (ollama · qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: ¿Cuándo es el primer parcial?
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] ¿Cuándo es el primer parcial?
+--------------------------------
+
+Asistente: No tengo acceso a la información sobre fechas de parciales o entregas del curso. Te recomiendo que consultes el programa del curso, la plataforma del curso o directamente al profesor para obtener los detalles exactos sobre la fecha del primer parcial.
+
+[finish_reason=stop · tokens entrada=317 salida=55]
+
+Tú: Explica qué es el positional encoding
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] ¿Cuándo es el primer parcial?
+[assistant] No tengo acceso a la información sobre fechas de parciales o entregas del curso.
+[user] Explica qué es el positional encoding
+--------------------------------
+
+Asistente: El **positional encoding** es una técnica utilizada en modelos como el Transformer para incorporar información sobre la **posición** de las palabras en una secuencia. Dado que el mecanismo de **atención** no tiene concepto inherente de orden, el positional encoding le da al modelo una idea de dónde se encuentra cada token en la secuencia. 
+
+Este encoding se agrega a los **embeddings** de las palabras, generalmente mediante una suma, y puede ser **senoidal** (usado en el Transformer original) o **aprendido** (como en modelos más modernos). Por ejemplo, en el Transformer, los positional encodings son senos y cosenos de múltiplos de frecuencias, lo que permite al modelo capturar relaciones entre tokens a distancias variables.
+
+En resumen, el positional encoding permite al modelo entender el **contexto y el orden** de los tokens, lo cual es esencial para tareas como la **traducción** o la **generación de texto**.
+
+[finish_reason=stop · tokens entrada=388 salida=215]
+
+Tú: Dame un ejemplo de eso
+
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] ¿Cuándo es el primer parcial?
+[assistant] No tengo acceso a la información sobre fechas de parciales o entregas del curso.
+[user] Explica qué es el positional encoding
+[assistant] El **positional encoding** es una técnica utilizada en modelos como el Transform
+[user] Dame un ejemplo de eso
+--------------------------------
+
+Asistente: Un ejemplo clásico es en la **traducción automática**. Supongamos que el modelo debe traducir "La gata come pescado" al inglés. Sin positional encoding, el modelo podría confundir "come pescado" con "pescado come" porque la atención no distingue el orden. Con positional encoding, el modelo recibe información sobre la posición de cada palabra: "La" está en posición 0, "gata" en 1, "come" en 2, etc. Esto ayuda al modelo a entender que "gata" es el sujeto y "come" el verbo, manteniendo el significado correcto.
+
+[finish_reason=stop · tokens entrada=618 salida=146]
+
+

@@ -1,0 +1,17 @@
+﻿> uv run python labs/01-llm/structured.py "¿Qué es el mecanismo de atención?"
+
+Texto crudo del LLM:
+{
+  "tema": "Mecanismo de atención en inteligencia artificial",
+  "dificultad": "intermedia",
+  "requiere_documentos_del_curso": false,
+  "respuesta_corta": "El mecanismo de atención es una técnica utilizada en redes neuronales para enfocar la atención en partes relevantes de la entrada. Permite mejorar el rendimiento en tareas como la traducción y el procesamiento de lenguaje natural."
+}
+
+Objeto validado:
+{
+  "tema": "Mecanismo de atención en inteligencia artificial",
+  "dificultad": "intermedia",
+  "requiere_documentos_del_curso": false,
+  "respuesta_corta": "El mecanismo de atención es una técnica utilizada en redes neuronales para enfocar la atención en partes relevantes de la entrada. Permite mejorar el rendimiento en tareas como la traducción y el procesamiento de lenguaje natural."
+}

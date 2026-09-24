@@ -1,0 +1,22 @@
+# Prueba 8, primeros intentos con OpenRouter: modelos gratuitos saturados.
+# La app NO se cae: llm_client.py traduce openai.RateLimitError a LLMError y chatbot.py sigue en el bucle.
+# (Mensajes recortados; se omite el user_id de OpenRouter.)
+
+LLM_MODEL=google/gemma-4-31b-it:free
+
+Tú: ¿Cuándo es el primer parcial?
+[error] RateLimitError: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, ...', 'provider_name': 'Google AI Studio', 'limit_source': 'upstream_provider_shared_pool', ...}}}
+
+Tú: Explica qué es el positional encoding
+[error] RateLimitError: Error code: 429 - (mismo error)
+
+> uv run python labs/01-llm/structured.py "¿Qué es el mecanismo de atención?"
+[error del proveedor] RateLimitError: Error code: 429 - (mismo error)
+
+LLM_MODEL=google/gemma-4-26b-a4b-it:free
+
+Tú: Dame un ejemplo de eso
+[error] RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit exceeded: free-models-per-min. ', 'code': 429, 'metadata': {'headers': {'X-RateLimit-Limit': '20', 'X-RateLimit-Remaining': '0', ...}, 'limit_source': 'openrouter_free_tier_per_minute', ...}}}
+
+# Además, con otro modelo OpenRouter devolvió HTTP 200 con un error y sin "choices"; el código original
+# fallaba con "TypeError: 'NoneType' object is not subscriptable". Se corrigió llm_client.py para lanzar LLMError.
