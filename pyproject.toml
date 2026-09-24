@@ -9,3 +9,8 @@ dependencies = [
     "python-dotenv>=1.0",  # carga variables de entorno desde .env
     "pydantic>=2.7",       # validación de salida estructurada
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",  # se agregó para las pruebas del reto opcional
+]
