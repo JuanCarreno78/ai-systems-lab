@@ -1,0 +1,11 @@
+[project]
+name = "ai-systems-lab-students"
+version = "0.1.0"
+description = "Labs del curso de IA: de Transformer a sistemas orquestados con LLM"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "openai>=1.40",        # cliente HTTP para APIs compatibles con Chat Completions (Groq, OpenRouter)
+    "python-dotenv>=1.0",  # carga variables de entorno desde .env
+    "pydantic>=2.7",       # validación de salida estructurada
+]
