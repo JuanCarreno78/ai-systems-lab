@@ -65,7 +65,7 @@ def main() -> None:
                 f"tokens entrada={response.prompt_tokens} salida={response.completion_tokens}]\n"
             )
 
-        # TODO 5 (resuelto): la API no guarda estado; el historial se mantiene aquí.
+        # TODO 5: la API no recuerda la conversación, por eso aquí se guarda cada pregunta y respuesta.
         history.append({"role": "user", "content": user_input})
         history.append({"role": "assistant", "content": response.text})
 

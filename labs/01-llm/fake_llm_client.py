@@ -1,6 +1,7 @@
-"""Proveedor falso (reto opcional): mismo método chat que LLMClient, sin llamar a ninguna API.
+"""Cliente falso hecho para el reto opcional.
 
-Se activa con LLM_PROVIDER=fake. Se usa en las pruebas de test_fake_provider.py.
+Tiene el mismo método chat que LLMClient, pero devuelve respuestas fijas en lugar de llamar a
+una API. Se usó para probar el programa sin internet ni costo (LLM_PROVIDER=fake).
 """
 
 import json

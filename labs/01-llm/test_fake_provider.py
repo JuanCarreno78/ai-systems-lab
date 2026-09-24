@@ -1,6 +1,6 @@
-"""Pruebas sin red ni API key gracias a FakeLLMClient.
+"""Pruebas del reto opcional. Usan FakeLLMClient, así que no necesitan internet ni API key.
 
-Uso:
+Se ejecutan con:
     uv run pytest labs/01-llm -v
 """
 

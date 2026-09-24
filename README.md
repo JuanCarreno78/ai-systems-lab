@@ -1,83 +1,58 @@
-# AI Systems Lab
+# A2.3 Chatbot con LLM
 
-Laboratorios de la unidad *De Transformer a sistemas orquestados con LLM* del curso de
-Inteligencia Artificial.
+Juan David Carreño Beltrán · Fundamentos de Inteligencia Artificial
 
-Durante 4 semanas construiremos, paso a paso, el **Asistente Inteligente del Curso de IA**.
-Cada semana se publica un lab nuevo que parte del anterior y agrega pocos conceptos nuevos.
-El énfasis está en la **ingeniería de software** de sistemas con IA: qué responsabilidad tiene
-cada componente, cómo interactúan y qué esconden los frameworks.
+Este repositorio tiene el código de la primera versión del Asistente Inteligente del Curso de IA,
+desarrollado a partir del laboratorio `01-llm` del profesor
+([ProfOmarPinzon/ai-systems-lab-students](https://github.com/ProfOmarPinzon/ai-systems-lab-students)).
+El asistente es un chatbot de consola que recibe preguntas de los estudiantes y se las envía a un modelo
+de lenguaje (LLM) por medio de una API.
 
-## Labs publicados
+El informe con el proceso, las pruebas y las respuestas a las preguntas de análisis está en
+[INFORME.md](INFORME.md), y las salidas completas de cada prueba están en la carpeta [evidencias](evidencias/).
 
-| Semana | Lab | Producto |
-|--------|-----|----------|
-| 1 | [`labs/01-llm`](labs/01-llm/README.md) | Chatbot con LLM en Python (`Usuario → LLM`) |
+## Qué se hizo
 
-Los siguientes labs se agregarán a este repositorio cada semana. Actualiza tu copia con `git pull`.
+- Se completaron los TODO 1 a 6 del código: la llamada al modelo, la construcción de los mensajes,
+  el prompt de sistema, el historial de la conversación y la validación de la respuesta en JSON.
+- Se hicieron las 8 pruebas del laboratorio. Las pruebas 1 a 7 se hicieron con un modelo local
+  (Ollama con `qwen3:8b`) y en la prueba 8 se cambió a OpenRouter editando solo el archivo `.env`.
+- Se probó el efecto de la temperatura y del límite de tokens en las respuestas.
+- Como reto opcional se hizo un cliente falso (`LLM_PROVIDER=fake`) con 8 pruebas en `pytest`
+  que funcionan sin internet.
 
-## Requisitos
+El primer commit del repositorio es el código base del profesor sin cambios, así que la diferencia con
+los commits siguientes muestra lo que se desarrolló.
 
-- Python 3.11 o superior
-- [uv](https://docs.astral.sh/uv/) (gestor de entornos y dependencias de Python)
-- Una API key de un proveedor de LLM. Recomendado: [Groq](https://console.groq.com/keys) (gratuito).
-  También funcionan [OpenRouter](https://openrouter.ai/keys) (gratuito),
-  [OpenAI](https://platform.openai.com/api-keys) y [DeepSeek](https://platform.deepseek.com/api_keys) (de pago).
+## Archivos
 
-## Configuración inicial
+| Archivo | Para qué sirve |
+|---|---|
+| `labs/01-llm/chatbot.py` | Programa de consola y conversación con el usuario |
+| `labs/01-llm/llm_client.py` | Única parte que se comunica con el proveedor del modelo |
+| `labs/01-llm/prompts.py` | Prompt de sistema y armado de los mensajes |
+| `labs/01-llm/structured.py` | Pide la respuesta en JSON y la valida |
+| `labs/01-llm/config.py` | Lee la configuración del archivo `.env` |
+| `labs/01-llm/fake_llm_client.py` | Cliente falso del reto opcional |
+| `labs/01-llm/test_fake_provider.py` | Pruebas del reto opcional |
+| `labs/01-llm/README.md` | Enunciado original del laboratorio |
 
-Desde la raíz del repositorio:
+## Cómo ejecutarlo
 
-```bash
-uv sync                  # crea .venv e instala las dependencias
-cp .env.example .env     # en Windows (PowerShell): Copy-Item .env.example .env
+Se usó Python 3.13 en Windows. Desde la carpeta del repositorio:
+
+```powershell
+py -3.13 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install openai python-dotenv pydantic pytest
+Copy-Item .env.example .env
 ```
 
-Edita `.env` y completa `LLM_PROVIDER`, `LLM_API_KEY` y `LLM_MODEL`.
+En el `.env` se pone el proveedor, la clave y el modelo. Después:
 
-> **El archivo `.env` contiene tu API key: nunca lo subas a un repositorio ni lo incluyas en una
-> entrega.** Ya está en `.gitignore`. Si publicas una clave por error, revócala de inmediato en la
-> consola del proveedor y crea una nueva.
-
-### Opción: GitHub Codespaces
-
-Si no quieres instalar nada en tu equipo, abre el repositorio en un Codespace
-(**Code → Codespaces → Create codespace**) y en la terminal ejecuta:
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-source $HOME/.local/bin/env
-uv sync
+```powershell
+.\.venv\Scripts\python.exe labs/01-llm/chatbot.py --debug
+.\.venv\Scripts\python.exe labs/01-llm/structured.py "¿Qué es el mecanismo de atención?"
+.\.venv\Scripts\python.exe -m pytest labs/01-llm -v
 ```
 
-Para la API key tienes dos opciones:
-
-- **Recomendada:** crea un secreto `LLM_API_KEY` en GitHub (*Settings → Codespaces → Secrets*) con
-  acceso a tu repositorio. No queda ningún archivo con la clave.
-- Crear el `.env` dentro del Codespace, como en la configuración local.
-
-Al terminar, detén el Codespace (botón **Codespaces** abajo a la izquierda → *Stop Current Codespace*).
-Si creaste un `.env`, bórralo o elimina el Codespace desde [github.com/codespaces](https://github.com/codespaces).
-
-## Cómo trabajar
-
-Todos los comandos se ejecutan **desde la raíz** del repositorio:
-
-```bash
-uv run python labs/01-llm/chatbot.py
-```
-
-Cada lab tiene su propio `README.md` con objetivo, arquitectura, pasos, pruebas, preguntas de
-análisis y evidencias de entrega. Los puntos a completar están marcados con `TODO` en el código.
-
-## Estructura
-
-```text
-ai-systems-lab-students/
-├── README.md
-├── pyproject.toml     dependencias compartidas por todos los labs
-├── uv.lock            versiones exactas de las dependencias
-├── .env.example       plantilla de configuración (cópiala como .env)
-└── labs/              un lab por semana
-    └── 01-llm/
-```
+El archivo `.env` tiene la clave de la API, por eso no está en el repositorio (está en `.gitignore`).
