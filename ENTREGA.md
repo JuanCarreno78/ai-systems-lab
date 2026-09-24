@@ -7,8 +7,11 @@ Estudiante: Juan David Carreño Beltrán · Fundamentos de Inteligencia Artifici
 
 ## 1. Código desarrollado
 
-- **Archivo:** `ai-systems-lab.zip` (adjunto). Contiene el repositorio completo **sin el archivo `.env`** y sin `.venv/`.
-- **Repositorio GitHub:** _(pegar aquí el enlace si se sube el zip a GitHub)_
+- **Repositorio GitHub:** https://github.com/JuanCarreno78/ai-chatbot-llm-lab01
+  - Commit 1: código base del laboratorio, sin modificar.
+  - Commit 2: solución. El diff entre ambos muestra exactamente lo desarrollado.
+  - Las evidencias completas están en la carpeta [`evidencias/`](evidencias/).
+- **Respaldo:** `ai-chatbot-llm-lab01.zip` con el mismo contenido. Ninguno de los dos incluye `.env` ni `.venv/`.
 
 ### Entorno de ejecución local
 
