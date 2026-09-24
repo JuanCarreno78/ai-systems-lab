@@ -39,20 +39,20 @@ los commits siguientes muestra lo que se desarrolló.
 
 ## Cómo ejecutarlo
 
-Se usó Python 3.13 en Windows. Desde la carpeta del repositorio:
+Se usó Python 3.13 en Windows con `uv`, como indica el laboratorio. Desde la carpeta del repositorio:
 
 ```powershell
-py -3.13 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install openai python-dotenv pydantic pytest
+uv sync
 Copy-Item .env.example .env
 ```
 
-En el `.env` se pone el proveedor, la clave y el modelo. Después:
+El `.env.example` ya tiene la configuración de Ollama que se usó en las pruebas 1 a 7. Para OpenRouter se
+cambian los valores por los del bloque comentado y se pone la clave. Después:
 
 ```powershell
-.\.venv\Scripts\python.exe labs/01-llm/chatbot.py --debug
-.\.venv\Scripts\python.exe labs/01-llm/structured.py "¿Qué es el mecanismo de atención?"
-.\.venv\Scripts\python.exe -m pytest labs/01-llm -v
+uv run python labs/01-llm/chatbot.py --debug
+uv run python labs/01-llm/structured.py "¿Qué es el mecanismo de atención?"
+uv run pytest labs/01-llm -v
 ```
 
 El archivo `.env` tiene la clave de la API, por eso no está en el repositorio (está en `.gitignore`).

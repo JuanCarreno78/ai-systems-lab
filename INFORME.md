@@ -33,8 +33,10 @@ cambiar de proveedor, se usó OpenRouter, un servicio en internet con modelos gr
 
 Se descargó el código del repositorio del profesor y se creó un entorno virtual de Python con las tres
 librerías que usa el laboratorio: `openai` (para comunicarse con el modelo), `python-dotenv` (para leer el
-archivo `.env`) y `pydantic` (para validar el JSON). Como no se tenía instalado `uv`, que es la herramienta
-que sugiere el README, se usó `pip`, que hace lo mismo.
+archivo `.env`) y `pydantic` (para validar el JSON). Al principio no se tenía instalado `uv`, que es la herramienta
+que sugiere el README, y se usó `pip`, que hace lo mismo. Al terminar se instaló `uv` y se revisó todo con los
+comandos del README (`uv sync` y `uv run ...`) en una copia limpia del repositorio, como la descargaría otra
+persona, para confirmar que funciona sin pasos extra.
 
 Ollama ofrece la misma forma de comunicación que OpenAI, por lo que para usarlo solo fue necesario agregar
 su dirección en `config.py` (`http://localhost:11434/v1`) y poner en el `.env` el proveedor `ollama` y el
@@ -247,8 +249,9 @@ mensaje claro en lugar de un error de la librería:
 [configuración] Falta LLM_API_KEY. Copia .env.example como .env y agrega tu clave.
 ```
 
-**Prueba 8. Cambio de proveedor.** Se ejecutaron las mismas preguntas con Ollama y con OpenRouter. Entre
-una ejecución y otra solo se editó el `.env`:
+**Prueba 8. Cambio de proveedor.** Se ejecutaron las mismas preguntas con Ollama y con OpenRouter, las dos
+veces con el mismo código (commit `bfddbcf` del repositorio). Entre una ejecución y otra solo se editó el
+`.env`:
 
 | | Ollama | OpenRouter |
 |---|---|---|
@@ -258,24 +261,42 @@ una ejecución y otra solo se editó el `.env`:
 | `LLM_MAX_TOKENS` | 512 | 1024 |
 | `LLM_REASONING_EFFORT` | `none` | `low` |
 
-Con OpenRouter el chatbot funcionó igual que con Ollama:
+Con los dos proveedores el chatbot funcionó igual. Resumen de las respuestas:
+
+| Pregunta | Ollama (`qwen3:8b`) | OpenRouter (`nex-n2.5-pro`) |
+|---|---|---|
+| ¿Cuándo es el primer parcial? | Dice que no tiene la información y remite al programa, la plataforma o el profesor. `stop`, 317 tokens de entrada | Igual. `stop`, 282 tokens de entrada |
+| Explica qué es el positional encoding | Explicación en un párrafo. `stop`, 394 tokens de entrada | Explicación con la fórmula de senos y cosenos. `stop`, 338 tokens de entrada |
+| Dame un ejemplo de eso | Ejemplo con la frase "El gato come pescado". `stop`, 626 tokens de entrada | Ejemplo numérico con vectores de dimensión 4. `stop`, 610 tokens de entrada |
+| `structured.py` "¿Qué es el mecanismo de atención?" | Validado, `requiere_documentos_del_curso: false` | Validado, `requiere_documentos_del_curso: false` |
+
+Parte de la salida con OpenRouter:
 
 ```text
 Asistente del Curso de IA  (openrouter · nex-agi/nex-n2.5-pro:free)
 
 Tú: ¿Cuándo es el primer parcial?
-Asistente: No tengo acceso a fechas de parciales, entregas o cronogramas del curso. Consulta el programa
-oficial, la plataforma del curso o al profesor para confirmar cuándo es el primer parcial.
-[finish_reason=stop · tokens entrada=282 salida=41]
-
-Tú: Explica qué es el positional encoding
-Asistente: El **positional encoding** aporta información sobre la posición de cada token, (...)
-[finish_reason=stop · tokens entrada=340 salida=265]
+Asistente: No tengo acceso al cronograma ni a las fechas de parciales del curso. Consulta el programa,
+la plataforma del curso o al profesor para confirmar cuándo será el primer parcial.
+[finish_reason=stop · tokens entrada=282 salida=65]
 
 Tú: Dame un ejemplo de eso
-Asistente: Supón un embedding de dimensión d_model=4. Con la fórmula sinusoidal original (...)
-Así, el mismo token recibiría una representación distinta si apareciera en otra posición.
-[finish_reason=stop · tokens entrada=525 salida=890]
+--- Mensajes enviados al LLM ---
+[system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
+[user] ¿Cuándo es el primer parcial?
+[assistant] No tengo acceso al cronograma ni a las fechas de parciales del curso. Consulta e
+[user] Explica qué es el positional encoding
+[assistant] El **positional encoding** aporta información sobre la posición de cada token. L
+[user] Dame un ejemplo de eso
+--------------------------------
+Asistente: Ejemplo con dimensión d=4. Para las posiciones t=0 y t=1:
+PE(0) = [0, 1, 0, 1]
+PE(1) = [sin(1), cos(1), sin(0.01), cos(0.01)] ≈ [0.8415, 0.5403, 0.0100, 1.0000]
+Si un token tiene embedding x = [0.2, -0.1, 0.4, 0.3], su representación codificada será:
+- Posición 0: x + PE(0) = [0.2, 0.9, 0.4, 1.3]
+- Posición 1: x + PE(1) ≈ [1.0415, 0.4403, 0.4100, 1.3000]
+Así, el mismo embedding cambia según su posición en la secuencia.
+[finish_reason=stop · tokens entrada=610 salida=816]
 ```
 
 Llegar a este resultado tomó varios intentos, y lo que pasó en el camino también sirvió para entender la
@@ -284,8 +305,8 @@ lista gratuita de OpenRouter, y los modelos gratuitos de Google respondían con 
 que había demasiadas peticiones en ese momento. En esos casos el chatbot no se cerró: mostró el error y
 siguió funcionando, gracias a `LLMError`. Con otro modelo, OpenRouter devolvió una respuesta sin contenido y
 el programa sí se cayó. Por eso se agregó en `llm_client.py` una revisión que trata ese caso como un error
-normal. Ese fue el único cambio de código durante esta prueba, y no hacía falta para cambiar de proveedor.
-Por último, con el modelo elegido y 512 tokens el tercer turno llegó vacío, porque este modelo también
+normal. Como el laboratorio pide no modificar ningún archivo `.py` al cambiar de proveedor, después de esta
+corrección se repitieron las dos ejecuciones, la de Ollama y la de OpenRouter, con el mismo código. Por último, con el modelo elegido y 512 tokens el tercer turno llegó vacío, porque este modelo también
 razona internamente. Se solucionó desde el `.env`, con `LLM_REASONING_EFFORT=low` y
 `LLM_MAX_TOKENS=1024`.
 
@@ -323,7 +344,8 @@ Para que el programa pueda escoger entre los dos, se agregó la función `create
 `chatbot.py` y `structured.py` la usan en lugar de crear el cliente directamente. Ese fue el único cambio en
 esos dos archivos.
 
-Con este cliente se escribieron 8 pruebas en `pytest`. Revisan que `build_messages` arme los mensajes en el
+Con este cliente se escribieron 8 pruebas en `pytest`, que se agregó a `pyproject.toml` como dependencia de
+desarrollo para que `uv run pytest` funcione. Revisan que `build_messages` arme los mensajes en el
 orden correcto, que `analyze_question` clasifique bien las preguntas generales y las del curso, y que el
 programa detecte tanto un texto que no es JSON como un JSON con un valor no permitido. Las 8 pasaron en menos
 de un segundo, sin internet y sin API key:
@@ -354,7 +376,7 @@ La memoria vive en el programa, en la lista `history` de `chatbot.py`, que está
 computador mientras el programa corre. En cada turno se le vuelve a enviar al modelo toda la conversación, y
 el modelo "recuerda" solo porque la lee de nuevo. Por eso, sin el TODO 5 no sabía qué se le había
 preguntado, y al cerrar el programa o usar `/reiniciar` todo se pierde. Con cada turno los tokens de entrada
-crecen: en la prueba 3 pasaron de 314 a 535, y en la prueba 8 de 282 a 340 y luego a 525. Como los
+crecen: en la prueba 3 pasaron de 314 a 535, y en la prueba 8 con OpenRouter de 282 a 338 y luego a 610. Como los
 proveedores cobran por token, cada turno cuesta más que el anterior y también tarda más, porque el modelo
 tiene que leer más texto antes de responder. Si la conversación supera la ventana de contexto (el máximo de
 texto que el modelo puede leer), el proveedor puede devolver un error o cortar los mensajes más viejos sin

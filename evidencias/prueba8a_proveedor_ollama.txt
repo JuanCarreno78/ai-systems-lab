@@ -1,4 +1,6 @@
-﻿# .env (proveedor A: ollama)
+﻿# Prueba 8, proveedor A: Ollama (modelo local)
+# Código: commit bfddbcf, el mismo en las dos ejecuciones. Entre una y otra solo cambia el .env.
+# .env usado (la clave se muestra oculta):
 LLM_PROVIDER=ollama
 LLM_API_KEY=***oculta*** (6 caracteres)
 LLM_MODEL=qwen3:8b
@@ -17,40 +19,59 @@ Tú: ¿Cuándo es el primer parcial?
 [user] ¿Cuándo es el primer parcial?
 --------------------------------
 
-Asistente: No tengo acceso a la información sobre fechas de parciales o entregas del curso. Te recomiendo que consultes el programa del curso, la plataforma del curso o directamente al profesor para obtener los detalles exactos sobre la fecha del primer parcial.
+Asistente: No tengo acceso a información específica sobre fechas de parciales, entregas o horarios del curso. Te sugiero que consultes el programa del curso, la plataforma donde se imparte o contactes directamente al profesor para obtener detalles precisos sobre la fecha del primer parcial.
 
-[finish_reason=stop · tokens entrada=317 salida=55]
+[finish_reason=stop · tokens entrada=317 salida=61]
 
 Tú: Explica qué es el positional encoding
 
 --- Mensajes enviados al LLM ---
 [system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
 [user] ¿Cuándo es el primer parcial?
-[assistant] No tengo acceso a la información sobre fechas de parciales o entregas del curso.
+[assistant] No tengo acceso a información específica sobre fechas de parciales, entregas o h
 [user] Explica qué es el positional encoding
 --------------------------------
 
-Asistente: El **positional encoding** es una técnica utilizada en modelos como el Transformer para incorporar información sobre la **posición** de las palabras en una secuencia. Dado que el mecanismo de **atención** no tiene concepto inherente de orden, el positional encoding le da al modelo una idea de dónde se encuentra cada token en la secuencia. 
+Asistente: El **positional encoding** es una técnica utilizada en modelos como el Transformer para incorporar información sobre la **posición** de cada token en la secuencia de entrada. Dado que el mecanismo de **atención** no tiene concepto intrínseco de orden, el positional encoding permite al modelo entender la **relación espacial** entre tokens. 
 
-Este encoding se agrega a los **embeddings** de las palabras, generalmente mediante una suma, y puede ser **senoidal** (usado en el Transformer original) o **aprendido** (como en modelos más modernos). Por ejemplo, en el Transformer, los positional encodings son senos y cosenos de múltiplos de frecuencias, lo que permite al modelo capturar relaciones entre tokens a distancias variables.
+Este encoding se agrega al **embedding** del token, generalmente como un vector de la misma dimensión, y puede ser **senoidal** o **posicional** (como en el caso de la implementación original de Transformer). Su objetivo es capturar la **relación de orden** entre elementos de la secuencia, lo cual es crucial para tareas como la **traducción** o el **sumarizado de textos**.
 
-En resumen, el positional encoding permite al modelo entender el **contexto y el orden** de los tokens, lo cual es esencial para tareas como la **traducción** o la **generación de texto**.
+En resumen, el positional encoding es una forma de **informar al modelo sobre la posición relativa de los tokens** dentro de la secuencia, permitiendo que entienda el **contexto y la estructura** del texto.
 
-[finish_reason=stop · tokens entrada=388 salida=215]
+[finish_reason=stop · tokens entrada=394 salida=217]
 
 Tú: Dame un ejemplo de eso
 
 --- Mensajes enviados al LLM ---
 [system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
 [user] ¿Cuándo es el primer parcial?
-[assistant] No tengo acceso a la información sobre fechas de parciales o entregas del curso.
+[assistant] No tengo acceso a información específica sobre fechas de parciales, entregas o h
 [user] Explica qué es el positional encoding
 [assistant] El **positional encoding** es una técnica utilizada en modelos como el Transform
 [user] Dame un ejemplo de eso
 --------------------------------
 
-Asistente: Un ejemplo clásico es en la **traducción automática**. Supongamos que el modelo debe traducir "La gata come pescado" al inglés. Sin positional encoding, el modelo podría confundir "come pescado" con "pescado come" porque la atención no distingue el orden. Con positional encoding, el modelo recibe información sobre la posición de cada palabra: "La" está en posición 0, "gata" en 1, "come" en 2, etc. Esto ayuda al modelo a entender que "gata" es el sujeto y "come" el verbo, manteniendo el significado correcto.
+Asistente: Un ejemplo clásico es en la **traducción automática**. Supongamos que el modelo debe traducir "El gato come pescado". La posición de cada palabra (el, gato, come, pescado) es crucial para entender la estructura gramatical. Sin positional encoding, el modelo podría confundir "come el gato pescado" con una frase coherente. El positional encoding le da al modelo información sobre la **posición relativa** de cada palabra, permitiéndole captar que "el" es el sujeto, "gato" es el sustantivo, etc. 
 
-[finish_reason=stop · tokens entrada=618 salida=146]
+En la implementación original de Transformer, los positional encodings se generan con funciones **senoidales** de diferentes frecuencias, lo que permite al modelo aprender **patrones de posición** de forma continua y diferenciada.
+
+[finish_reason=stop · tokens entrada=626 salida=184]
 
 
+
+> uv run python labs/01-llm/structured.py "¿Qué es el mecanismo de atención?"
+Texto crudo del LLM:
+{
+  "tema": "Mecanismo de atención en inteligencia artificial",
+  "dificultad": "intermedia",
+  "requiere_documentos_del_curso": false,
+  "respuesta_corta": "El mecanismo de atención es una técnica utilizada en redes neuronales para enfocar la atención en partes relevantes de la entrada. Permite mejorar el rendimiento en tareas como la traducción y el procesamiento de lenguaje natural."
+}
+
+Objeto validado:
+{
+  "tema": "Mecanismo de atención en inteligencia artificial",
+  "dificultad": "intermedia",
+  "requiere_documentos_del_curso": false,
+  "respuesta_corta": "El mecanismo de atención es una técnica utilizada en redes neuronales para enfocar la atención en partes relevantes de la entrada. Permite mejorar el rendimiento en tareas como la traducción y el procesamiento de lenguaje natural."
+}

@@ -1,14 +1,12 @@
-﻿# .env (proveedor B: openrouter) - la clave se muestra oculta
+﻿# Prueba 8, proveedor B: OpenRouter
+# Código: commit bfddbcf, el mismo en las dos ejecuciones. Entre una y otra solo cambia el .env.
+# .env usado (la clave se muestra oculta):
 LLM_PROVIDER=openrouter
 LLM_API_KEY=***oculta*** (73 caracteres)
 LLM_MODEL=nex-agi/nex-n2.5-pro:free
 LLM_TEMPERATURE=0.3
 LLM_MAX_TOKENS=1024
 LLM_REASONING_EFFORT=low
-
-# Para cambiar de proveedor solo se editó .env (LLM_PROVIDER, LLM_API_KEY, LLM_MODEL, LLM_MAX_TOKENS, LLM_REASONING_EFFORT).
-# Nota: entre la parte A y la B se corrigió el manejo de errores de llm_client.py (respuesta HTTP 200 sin 'choices');
-# ese cambio no es necesario para el cambio de proveedor, solo para que un error del proveedor no tumbe la app.
 
 > uv run python labs/01-llm/chatbot.py --debug
 Asistente del Curso de IA  (openrouter · nex-agi/nex-n2.5-pro:free)
@@ -21,56 +19,66 @@ Tú: ¿Cuándo es el primer parcial?
 [user] ¿Cuándo es el primer parcial?
 --------------------------------
 
-Asistente: No tengo acceso a fechas de parciales, entregas o cronogramas del curso. Consulta el programa oficial, la plataforma del curso o al profesor para confirmar cuándo es el primer parcial.
+Asistente: No tengo acceso al cronograma ni a las fechas de parciales del curso. Consulta el programa, la plataforma del curso o al profesor para confirmar cuándo será el primer parcial.
 
-[finish_reason=stop · tokens entrada=282 salida=41]
+[finish_reason=stop · tokens entrada=282 salida=65]
 
 Tú: Explica qué es el positional encoding
 
 --- Mensajes enviados al LLM ---
 [system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
 [user] ¿Cuándo es el primer parcial?
-[assistant] No tengo acceso a fechas de parciales, entregas o cronogramas del curso. Consult
+[assistant] No tengo acceso al cronograma ni a las fechas de parciales del curso. Consulta e
 [user] Explica qué es el positional encoding
 --------------------------------
 
-Asistente: El **positional encoding** aporta información sobre la posición de cada token, ya que la atención autoatencional por sí sola es esencialmente invariante a permutaciones: sin esta señal, el modelo no podría distinguir órdenes distintos de los mismos tokens. Se suma al embedding léxico:
+Asistente: El **positional encoding** aporta información sobre la posición de cada token. La autoatención, por sí sola, es esencialmente invariante a permutaciones: si reordenamos la secuencia, también se reordenan sus representaciones, pero no se distingue si una palabra iba antes o después. Por eso al embedding \(x_t\) se le suma un vector posicional \(p_t\):
 
 \[
-\mathbf{x}'_i=\mathbf{x}_i+\mathbf{p}_i
+x'_t = x_t + p_t
 \]
 
-En el Transformer original, \(\mathbf{p}_i\) usa senos y cosenos de frecuencias geométricamente decrecientes, permitiendo representar posiciones y posibles relaciones relativas. En arquitecturas modernas también son comunes los encodings aprendidos, ALiBi y **RoPE**, este último rotando consultas y claves para codificar distancias relativas directamente en la atención.
+En el Transformer original, \(p_t\) se genera mediante senos y cosenos de distintas frecuencias:
 
-[finish_reason=stop · tokens entrada=340 salida=265]
+\[
+PE(t,2i)=\sin\left(\frac{t}{10000^{2i/d}}\right), \qquad
+PE(t,2i+1)=\cos\left(\frac{t}{10000^{2i/d}}\right)
+\]
+
+Las frecuencias bajas capturan posiciones generales y las altas, diferencias locales. La máscara causal del decoder solo controla qué tokens pueden atenderse; no sustituye al positional encoding. Modelos modernos suelen usar variantes como **RoPE**, que incorpora la posición directamente en las consultas y claves de la atención.
+
+[finish_reason=stop · tokens entrada=338 salida=470]
 
 Tú: Dame un ejemplo de eso
 
 --- Mensajes enviados al LLM ---
 [system] Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligenc
 [user] ¿Cuándo es el primer parcial?
-[assistant] No tengo acceso a fechas de parciales, entregas o cronogramas del curso. Consult
+[assistant] No tengo acceso al cronograma ni a las fechas de parciales del curso. Consulta e
 [user] Explica qué es el positional encoding
-[assistant] El **positional encoding** aporta información sobre la posición de cada token, y
+[assistant] El **positional encoding** aporta información sobre la posición de cada token. L
 [user] Dame un ejemplo de eso
 --------------------------------
 
-Asistente: Supón un embedding de dimensión \(d_{model}=4\). Con la fórmula sinusoidal original:
+Asistente: Ejemplo con dimensión \(d=4\). Para las posiciones \(t=0\) y \(t=1\):
+
 \[
-PE(pos,2i)=\sin(pos/10000^{2i/d}),\qquad PE(pos,2i+1)=\cos(pos/10000^{2i/d})
+PE(0)=[0,\;1,\;0,\;1]
 \]
 
-Para las posiciones 0 y 1:
 \[
-PE_0\approx[0,1,0,1],\qquad PE_1\approx[0.8415,0.5403,0.0100,0.99995]
+PE(1)=[\sin(1),\;\cos(1),\;\sin(0.01),\;\cos(0.01)]
+      \approx[0.8415,\;0.5403,\;0.0100,\;1.0000]
 \]
-Si el primer token tiene embedding \([0.20,-0.10,0.40,0.30]\), su representación final será:
-\[
-[0.20,-0.10,0.40,0.30]+[0,1,0,1]=[0.20,0.90,0.40,1.30]
-\]
-Así, el mismo token recibiría una representación distinta si apareciera en otra posición.
 
-[finish_reason=stop · tokens entrada=525 salida=890]
+Si un token tiene embedding \(x=[0.2,-0.1,0.4,0.3]\), su representación codificada será:
+
+- Posición 0: \(x+PE(0)=[0.2,0.9,0.4,1.3]\)
+- Posición 1: \(x+PE(1)\approx[1.0415,0.4403,0.4100,1.3000]\)
+
+Así, el mismo embedding cambia según su posición en la secuencia.
+
+[finish_reason=stop · tokens entrada=610 salida=816]
 
 
 
@@ -80,7 +88,7 @@ Texto crudo del LLM:
   "tema": "Mecanismo de atención",
   "dificultad": "basica",
   "requiere_documentos_del_curso": false,
-  "respuesta_corta": "Es un mecanismo que permite a un modelo asignar distinta importancia a partes de la información de entrada según su relevancia para la tarea. Así puede centrarse en los elementos más útiles al generar o procesar una respuesta."
+  "respuesta_corta": "Es un mecanismo que permite a una red neuronal centrarse en las partes más relevantes de los datos de entrada al generar una salida. Asigna pesos o importancia a diferentes elementos según su relación con la tarea."
 }
 
 Objeto validado:
@@ -88,5 +96,5 @@ Objeto validado:
   "tema": "Mecanismo de atención",
   "dificultad": "basica",
   "requiere_documentos_del_curso": false,
-  "respuesta_corta": "Es un mecanismo que permite a un modelo asignar distinta importancia a partes de la información de entrada según su relevancia para la tarea. Así puede centrarse en los elementos más útiles al generar o procesar una respuesta."
+  "respuesta_corta": "Es un mecanismo que permite a una red neuronal centrarse en las partes más relevantes de los datos de entrada al generar una salida. Asigna pesos o importancia a diferentes elementos según su relación con la tarea."
 }
