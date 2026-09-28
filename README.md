@@ -1,6 +1,6 @@
 # A2.3 Chatbot con LLM
 
-Juan David Carreño Beltrán, Fundamentos de Inteligencia Artificial
+Juan David Carreño Beltran, Fundamentos de Inteligencia Artificial
 
 Este repositorio tiene el código de la primera versión del Asistente Inteligente del Curso de IA,
 desarrollado a partir del laboratorio `01-llm` del profesor

@@ -1,12 +1,12 @@
 # A2.3. Informe chatbot con LLM
 
-Nombre: Juan David Carreño Beltrán  
+Nombre: Juan David Carreño Beltran  
 Código: 000550919  
 Asignatura: Fundamentos de Inteligencia Artificial  
 Docente: Omar Pinzón  
-Fecha: 24 de septiembre de 2026
+Fecha: 28 de septiembre de 2026
 
-Repositorio: https://github.com/JuanCarreno78/ai-chatbot-llm-lab01
+Repositorio: https://github.com/JuanCarreno78/ai-systems-lab
 
 ## 1. Introducción
 
