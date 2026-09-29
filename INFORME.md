@@ -9,29 +9,29 @@ Repositorio: https://github.com/JuanCarreno78/ai-systems-lab
 
 ## 1. Introducción
 
-Este informe presenta la primera versión del Asistente Inteligente del Curso de IA: un chatbot de consola que envía las preguntas del estudiante a un modelo de lenguaje (LLM) por medio de una API. El objetivo fue usar el modelo como una pieza más del programa: enviarle mensajes, controlar su respuesta con parámetros, separar el proveedor del resto del código y validar lo que devuelve.
+En este informe se muestra la primera versión del Asistente Inteligente del Curso de IA. Es un chatbot que funciona en la consola: el estudiante escribe una pregunta, el programa se la manda a un modelo de lenguaje (LLM) por medio de una API, y después muestra la respuesta. La idea de la práctica era usar el modelo como una parte más del programa, es decir, mandarle mensajes, cambiar cómo responde con algunos valores, mantener el proveedor separado del resto del código y revisar lo que devuelve antes de usarlo.
 
-El profesor entregó el código base con seis partes por completar (TODO). Cada archivo tiene una tarea: config.py lee el .env, llm_client.py habla con el proveedor, prompts.py arma los mensajes, chatbot.py maneja la conversación y structured.py pide y valida respuestas en JSON. Gracias a esa separación se pudo cambiar de proveedor sin tocar la lógica del chatbot.
+El profesor entregó el código con seis partes por completar, marcadas como TODO. Cada archivo hace una sola cosa: config.py lee el archivo .env, llm_client.py es el único que habla con el proveedor, prompts.py arma los mensajes, chatbot.py maneja la conversación y structured.py pide la respuesta en JSON y la revisa. Esta separación fue muy útil, porque cuando hubo que cambiar de proveedor solo se tocó el .env, y el chatbot siguió igual.
 
-Se trabajó en Windows 11 con Python 3.13 y Visual Studio Code. Las pruebas 1 a 7 se hicieron con Ollama (un programa que ejecuta modelos en el propio computador) y el modelo qwen3:8b, sin API key ni costo. La prueba 8 se hizo con OpenRouter, un servicio en internet con modelos gratuitos. El código está en el repositorio indicado arriba, sin el archivo .env, que es el que tiene la clave.
+La práctica se hizo en Windows 11, con Python 3.13 y Visual Studio Code. Las pruebas 1 a 7 se hicieron con Ollama, que es un programa para correr modelos en el mismo computador, y con el modelo qwen3:8b. Así no hizo falta una API key y no hubo ningún costo. La prueba 8 se hizo con OpenRouter, que es un servicio en internet con modelos gratis. El código está en el repositorio de arriba, pero sin el archivo .env, porque ahí está la clave.
 
 ## 2. Desarrollo
 
 ### Preparación del entorno
 
-Se instalaron las librerías del laboratorio: openai (comunicación con el modelo), python-dotenv (lectura del .env) y pydantic (validación del JSON). Para usar Ollama bastó con agregar su dirección en config.py (http://localhost:11434/v1) y poner en el .env el proveedor ollama y el modelo qwen3:8b; como Ollama no revisa la clave, en LLM_API_KEY se puso el texto ollama. Al final se comprobó todo con los comandos del enunciado (uv sync y uv run) en una copia limpia del repositorio.
+Primero se instalaron las tres librerías del laboratorio: openai, para hablar con el modelo, python-dotenv, para leer el .env, y pydantic, para revisar el JSON. Para usar Ollama solo hubo que agregar su dirección en config.py (http://localhost:11434/v1) y poner en el .env el proveedor ollama y el modelo qwen3:8b. Ollama no pide clave, entonces en LLM_API_KEY se dejó la palabra ollama. Al final se volvió a probar todo con los comandos del enunciado (uv sync y uv run) en una copia nueva del repositorio, para estar seguros de que también funciona en otro computador.
 
-El primer problema fue que qwen3 "piensa" antes de responder, y ese razonamiento cuenta dentro del límite de tokens (los pedazos de texto que el modelo cuenta al leer y escribir). Con 200 tokens la respuesta llegó vacía. Se resolvió con la opción LLM_REASONING_EFFORT=none en el .env, que desactiva ese razonamiento sin cambiar el chatbot.
+El primer problema apareció en la primera prueba. qwen3 es un modelo que "piensa" antes de responder, y ese pensamiento también cuenta dentro del límite de tokens, que son los pedazos de texto que el modelo cuenta cuando lee y escribe. Con un límite de 200 tokens la respuesta llegó vacía, porque el modelo gastó todo pensando y no le quedó espacio para contestar. Se solucionó poniendo LLM_REASONING_EFFORT=none en el .env, que le dice al modelo que no piense antes de responder. Como el cambio quedó en el .env, el chatbot no tuvo que cambiar.
 
 ### Desarrollo de los TODO
 
-TODO 1 y 2 (llm_client.py): el método chat arma la petición con los mensajes, el modelo, la temperatura y el límite de tokens, y toma los valores del .env si no se indican. Si se pide JSON, agrega response_format. Los errores de la librería openai se convierten en LLMError, para que el chatbot no dependa de ella. De la respuesta se guardan en un LLMResponse el texto, el modelo, el motivo de fin (finish_reason) y los tokens de entrada y salida.
+TODO 1 y 2 (llm_client.py): el método chat arma la petición con los mensajes, el modelo, la temperatura y el límite de tokens. Si el programa no dice qué temperatura o qué límite usar, toma los del .env. Si se pide la respuesta en JSON, agrega response_format. Cuando la librería openai da un error, se cambia por LLMError, que es un error del propio programa, para que el chatbot no dependa de openai. Al final, de la respuesta se guardan el texto, el modelo, el motivo por el que el modelo dejó de escribir (finish_reason) y los tokens de entrada y de salida, todo dentro de un LLMResponse.
 
-TODO 3 (prompts.py): build_messages arma la lista con el mensaje de sistema, el historial y la pregunta nueva, en ese orden. TODO 5 (chatbot.py): después de cada turno se guardan la pregunta y la respuesta en el historial. Sin este paso, a la pregunta "¿Qué te pregunté antes?" el chatbot respondió que no tenía acceso a la conversación; con él, sí recordó. TODO 6 (structured.py): el texto se revisa en dos pasos, json.loads para saber si es JSON y QuestionAnalysis.model_validate para saber si tiene los campos y valores correctos. El TODO 4 se explica en el siguiente punto.
+TODO 3 (prompts.py): build_messages arma la lista de mensajes en este orden, primero el mensaje de sistema, después el historial y al final la pregunta nueva. TODO 5 (chatbot.py): después de cada turno se guardan en el historial la pregunta y la respuesta. Antes de hacer este TODO, se le preguntó al chatbot "¿Qué te pregunté antes?" y dijo que no tenía acceso a la conversación. Después de hacerlo, sí se acordó. TODO 6 (structured.py): el texto se revisa en dos pasos. Primero json.loads mira si el texto es JSON, y después QuestionAnalysis.model_validate mira si tiene los campos y los valores que se piden. El TODO 4 se explica en el siguiente punto.
 
 ### Prompt de sistema
 
-El prompt de sistema es la instrucción que recibe el modelo en cada petición. El final quedó así:
+El prompt de sistema es la instrucción que se le manda al modelo en cada petición, antes de la pregunta. El prompt final quedó así:
 
 ```text
 Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligencia
@@ -54,32 +54,32 @@ Reglas sobre información del curso:
   la parte general y aclara qué parte no puedes confirmar.
 ```
 
-Cumple lo que pide el TODO 4 (rol, idioma, nivel de los estudiantes y no inventar datos del curso) y además limita la extensión y dice a dónde consultar. Comparación con la pregunta "¿Cuándo es el primer parcial?":
+Cumple lo que pide el TODO 4, porque dice cuál es el rol y el idioma, dice que los estudiantes ya conocen los Transformers y le prohíbe inventar datos del curso. Además se le pidió que fuera corto y que dijera dónde consultar cuando no sabe algo. En la tabla se compara la respuesta a la pregunta "¿Cuándo es el primer parcial?" con el prompt que traía el código y con el prompt final:
 
 | Aspecto | Antes: "Eres un asistente útil." | Después: prompt final |
 |---|---|---|
 | Respuesta del modelo | "Lo siento, pero no tengo información sobre cuándo es el primer parcial. ¿Podrías proporcionarme más detalles, como la materia o la institución donde estás inscrito? Así podré ayudarte mejor." | "No tengo acceso a la información sobre fechas de parciales o entregas del curso. Te sugiero que consultes el programa del curso, la plataforma del curso o directamente al profesor para obtener detalles precisos sobre la fecha del primer parcial." |
-| ¿Sabe que es el asistente del curso? | No, pregunta por la materia o la institución. | Sí, habla del curso y de dónde consultar. |
-| ¿Inventa una fecha? | No, pero nada se lo impide. En otra prueba ofreció ayudar a buscar la fecha, algo que no puede hacer. | No, y es una regla escrita. Se mantuvo aunque se le pidió una fecha "aunque sea inventada". |
+| ¿Sabe que es el asistente del curso? | No, por eso pregunta por la materia o la institución. | Sí, habla del curso y de dónde consultar. |
+| ¿Inventa una fecha? | No, pero nada se lo prohíbe. En otra prueba ofreció ayudar a buscar la fecha, y eso no lo puede hacer. | No, y es una regla escrita. La siguió aunque se le pidió una fecha "aunque sea inventada". |
 
-El prompt genérico tampoco inventó la fecha con este modelo. La diferencia es que con el prompt final el comportamiento lo decide el programa y no la suerte del modelo.
+Con este modelo, el prompt que traía el código tampoco inventó una fecha. Pero eso fue suerte, porque nada en ese prompt se lo prohibía. Con el prompt final, en cambio, la regla está escrita, y el modelo la siguió incluso cuando se le pidió inventar la fecha.
 
 ### Pruebas 1 a 8
 
-Las salidas completas están en la carpeta evidencias del repositorio. En las salidas, el programa separa los datos con una barra (|).
+Las salidas completas de todas las pruebas están en la carpeta evidencias del repositorio. En la tabla está lo que pedía el enunciado y lo que se obtuvo. En las salidas, el programa separa los datos con una barra (|).
 
 | Prueba | Resultado esperado | Resultado obtenido |
 |---|---|---|
 | 1. Llamada básica | LLMResponse con finish_reason='stop' y tokens mayores que cero | Cumple: stop, 39 tokens de entrada y 41 de salida |
-| 2. Rol system | El asistente no inventa la fecha del parcial | Cumple: dice que no tiene la información y remite al programa, la plataforma o el profesor |
-| 3. Historial | La segunda respuesta sigue el tema y después de /reiniciar ya no hay contexto | Cumple: los tokens de entrada subieron de 314 a 535 y volvieron a 313 al reiniciar |
+| 2. Rol system | El asistente no inventa la fecha del parcial | Cumple: dice que no tiene la información y manda a revisar el programa, la plataforma o al profesor |
+| 3. Historial | La segunda respuesta sigue el tema, y después de /reiniciar ya no hay contexto | Cumple: los tokens de entrada subieron de 314 a 535 y bajaron a 313 al reiniciar |
 | 4. Límite de tokens | Con LLM_MAX_TOKENS=30 la respuesta se corta con finish_reason=length | Cumple: se cortó a mitad de frase con length |
 | 5. Respuesta estructurada, tema general | JSON validado con requiere_documentos_del_curso: false | Cumple |
 | 6. Respuesta estructurada, tema del curso | JSON validado con requiere_documentos_del_curso: true | Cumple |
-| 7. Configuración ausente | Mensaje claro cuando falta la clave | Cumple: "Falta LLM_API_KEY..." sin error de la librería |
-| 8. Cambio de proveedor | El chatbot funciona sin modificar el código | Cumple: Ollama y OpenRouter con el mismo código, cambiando solo el .env |
+| 7. Configuración ausente | Mensaje claro cuando falta la clave | Cumple: "Falta LLM_API_KEY...", sin error de la librería |
+| 8. Cambio de proveedor | El chatbot funciona sin cambiar el código | Cumple: Ollama y OpenRouter con el mismo código, cambiando solo el .env |
 
-**Prueba 1.** LLMResponse con finish_reason='stop' (el modelo terminó solo) y tokens mayores que cero:
+**Prueba 1.** Se imprimió un LLMResponse con finish_reason='stop', que quiere decir que el modelo terminó de escribir por sí mismo, y con tokens mayores que cero:
 
 ```text
 > uv run python labs/01-llm/llm_client.py
@@ -89,9 +89,9 @@ secuencia mediante atención distribuida.', model='qwen3:8b', finish_reason='sto
 prompt_tokens=39, completion_tokens=41)
 ```
 
-**Prueba 2.** El asistente dijo que no tenía la fecha y no la inventó (salida en la tabla del prompt de sistema).
+**Prueba 2.** El asistente dijo que no tenía la fecha y no la inventó. La respuesta está en la tabla del prompt de sistema.
 
-**Prueba 3.** Salida del chatbot con --debug, que muestra los mensajes enviados al modelo y los tokens:
+**Prueba 3.** Se corrió el chatbot con --debug, que muestra los mensajes que se le mandan al modelo y los tokens que se usan. Esta fue la salida:
 
 ```text
 > uv run python labs/01-llm/chatbot.py --debug
@@ -147,9 +147,9 @@ no tengo acceso al cronograma del curso. (...)
 [finish_reason=stop | tokens entrada=313 salida=145]
 ```
 
-La segunda respuesta sigue con el positional encoding porque el historial viaja con la pregunta: la lista de mensajes crece y los tokens de entrada suben de 314 a 535. Después de /reiniciar solo quedan dos mensajes, "eso" ya no se refiere a nada y el modelo improvisa un ejemplo sobre su prompt de sistema.
+La segunda respuesta siguió hablando del positional encoding, porque el historial se mandó junto con la pregunta. En la salida se ve que la lista de mensajes crece y que los tokens de entrada suben de 314 a 535. Después de /reiniciar, la lista vuelve a tener solo dos mensajes. Como "eso" ya no se refería a nada, el modelo se inventó un ejemplo sobre lo único que tenía, que era el prompt de sistema.
 
-**Prueba 4.** Con LLM_MAX_TOKENS=30 la respuesta se cortó a mitad de frase con finish_reason=length:
+**Prueba 4.** Con LLM_MAX_TOKENS=30 en el .env, la respuesta se cortó a mitad de frase y el motivo de fin fue length:
 
 ```text
 Tú: Explica en detalle cómo funciona la arquitectura Transformer completa: embeddings,
@@ -162,7 +162,7 @@ Asistente: La arquitectura Transformer se compone de dos bloques principales: el
 [finish_reason=length | tokens entrada=345 salida=30]
 ```
 
-**Pruebas 5 y 6.** La pregunta general se validó con requiere_documentos_del_curso en false y la del parcial en true:
+**Pruebas 5 y 6.** La pregunta general salió con requiere_documentos_del_curso en false, y la pregunta sobre el parcial salió con el mismo campo en true. Las dos pasaron la validación:
 
 ```text
 > uv run python labs/01-llm/structured.py "¿Qué es el mecanismo de atención?"
@@ -187,14 +187,14 @@ Objeto validado:
 -> Esta pregunta necesitaría documentos del curso para responderse bien.
 ```
 
-**Prueba 7.** Con LLM_API_KEY vacío, el programa mostró un mensaje claro en lugar de un error de la librería:
+**Prueba 7.** Se dejó vacío LLM_API_KEY en el .env. El programa mostró un mensaje claro, y no un error de la librería:
 
 ```text
 > uv run python labs/01-llm/chatbot.py
 [configuración] Falta LLM_API_KEY. Copia .env.example como .env y agrega tu clave.
 ```
 
-**Prueba 8.** Las mismas preguntas se ejecutaron con Ollama y con OpenRouter usando el mismo código (commit bfddbcf del repositorio). Solo cambió el .env:
+**Prueba 8.** Se hicieron las mismas preguntas con Ollama y con OpenRouter, las dos veces con el mismo código (commit bfddbcf del repositorio). Lo único que cambió fue el .env:
 
 | Variable del .env | Ollama | OpenRouter |
 |---|---|---|
@@ -206,24 +206,26 @@ Objeto validado:
 
 | Pregunta | Ollama (qwen3:8b) | OpenRouter (nex-n2.5-pro) |
 |---|---|---|
-| ¿Cuándo es el primer parcial? | Dice que no tiene la información y remite al programa, la plataforma o el profesor. stop, 317 tokens de entrada | Igual. stop, 282 tokens de entrada |
+| ¿Cuándo es el primer parcial? | Dice que no tiene la información y manda a revisar el programa, la plataforma o al profesor. stop, 317 tokens de entrada | Igual. stop, 282 tokens de entrada |
 | Explica qué es el positional encoding | Explicación en un párrafo. stop, 394 tokens de entrada | Explicación con la fórmula de senos y cosenos. stop, 338 tokens de entrada |
-| Dame un ejemplo de eso | Ejemplo con la frase "El gato come pescado". stop, 626 tokens de entrada | Ejemplo numérico con vectores de dimensión 4. stop, 610 tokens de entrada |
+| Dame un ejemplo de eso | Ejemplo con la frase "El gato come pescado". stop, 626 tokens de entrada | Ejemplo con números y vectores de tamaño 4. stop, 610 tokens de entrada |
 | structured.py: ¿Qué es el mecanismo de atención? | Validado, requiere_documentos_del_curso: false | Validado, requiere_documentos_del_curso: false |
 
-En el camino hubo varios problemas. El modelo que sugería el enunciado (meta-llama/llama-3.3-70b-instruct:free) ya no era gratuito, y los modelos gratuitos de Google respondían con el error 429 (demasiadas peticiones); el chatbot mostró el error y siguió funcionando gracias a LLMError. Con otro modelo, OpenRouter devolvió una respuesta sin contenido y el programa se cayó, así que se agregó en llm_client.py una revisión que lo trata como error. Como el enunciado pide no modificar ningún .py al cambiar de proveedor, después de esa corrección se repitieron las dos ejecuciones con el mismo código. Por último, con 512 tokens el tercer turno llegó vacío porque nex-n2.5-pro también razona; se resolvió en el .env con LLM_REASONING_EFFORT=low y LLM_MAX_TOKENS=1024.
+Llegar a este resultado no fue directo. El modelo que decía el enunciado (meta-llama/llama-3.3-70b-instruct:free) ya no era gratis, y los modelos gratis de Google respondían con el error 429, que quiere decir que había demasiadas peticiones en ese momento. En esos casos el chatbot no se cerró, mostró el error y siguió funcionando, gracias a LLMError. Con otro modelo, OpenRouter mandó una respuesta vacía y ahí el programa sí se cerró, así que se agregó en llm_client.py una revisión para tratar ese caso como un error más.
+
+Como el enunciado pide no cambiar ningún archivo .py al cambiar de proveedor, después de esa corrección se repitieron las dos pruebas, la de Ollama y la de OpenRouter, con el mismo código. Por último, con 512 tokens el tercer turno llegó vacío, porque nex-n2.5-pro también piensa antes de responder. Esto se arregló en el .env, con LLM_REASONING_EFFORT=low y LLM_MAX_TOKENS=1024.
 
 ### Experimento con temperature y max_tokens
 
-Solo se cambiaron valores en el .env. La temperatura controla qué tan variada es la respuesta. Se pidió "Propón un nombre para este asistente" tres veces con cada valor:
+Para este paso solo se cambiaron valores en el .env. La temperatura cambia qué tan variada es la respuesta del modelo. Se pidió "Propón un nombre para este asistente" tres veces con cada valor:
 
 | Temperatura | Intento 1 | Intento 2 | Intento 3 | Observación |
 |---|---|---|---|---|
-| 0 | AI Tutor / NeuroTutor | AI Tutor / NeuroTutor | AI Tutor / NeuroTutor | Los mismos nombres y casi el mismo texto; el 2 y el 3 fueron idénticos |
+| 0 | AI Tutor / NeuroTutor | AI Tutor / NeuroTutor | AI Tutor / NeuroTutor | Los mismos nombres y casi el mismo texto. El 2 y el 3 fueron iguales |
 | 0.7 | AI-Fundamentos / Asistente IA | AI-Fundamentos / AI-Base / AI-Basecamp | FIA-Asistente / FIA-IA | La idea principal se repite, pero cambian las opciones |
 | 1.2 | AI Tutor / NeuroTutor / Transformer Tutor | FAI Assistant / AI Fundamentos | AI-Fundas / NeuroFundas | Cada intento dio nombres distintos, incluso inventados |
 
-Con la instrucción "Responde solo con el nombre" casi no hubo variación ni con 1.2 (8 de 9 intentos dieron "AsistenteIA"), porque al restringir tanto la respuesta el modelo tiene pocas opciones. El límite de tokens se probó con una pregunta larga:
+También se probó pidiendo "Responde solo con el nombre". Así casi no hubo cambios, ni siquiera con 1.2 (8 de 9 intentos dieron "AsistenteIA"), porque cuando la pregunta es tan cerrada el modelo tiene muy pocas opciones para escoger. El límite de tokens se probó con una pregunta larga:
 
 | max_tokens | finish_reason | Tokens de salida | Resultado |
 |---|---|---|---|
@@ -231,29 +233,31 @@ Con la instrucción "Responde solo con el nombre" casi no hubo variación ni con
 | 100 | length | 100 | Alcanzó un párrafo y se cortó: "...con positional encoding para incorporar" |
 | 512 | stop | 280 | Respuesta completa en tres párrafos |
 
-El límite no hace que el modelo resuma: solo lo detiene donde se acaban los tokens.
+El límite no hace que el modelo resuma su respuesta. El modelo escribe como si fuera a terminar, y el límite solo lo corta cuando se acaban los tokens.
 
 ### Reto opcional: cliente falso para pruebas
 
-Se hizo el reto del proveedor falso. FakeLLMClient tiene el mismo método chat que el cliente real, pero devuelve respuestas fijas sin llamar a ninguna API, y se activa con LLM_PROVIDER=fake. La función create_client de llm_client.py elige entre los dos, y chatbot.py y structured.py la usan para crear el cliente. Se escribieron 8 pruebas en pytest: el orden de build_messages, la clasificación de analyze_question y la detección de un texto que no es JSON y de un JSON con un valor no permitido. Las 8 pasan en menos de un segundo, sin internet ni API key. Esto fue posible porque el chatbot solo conoce el método chat y el LLMResponse, así que el modelo real se pudo reemplazar sin tocar su lógica.
+Se hizo el reto del proveedor falso. FakeLLMClient tiene el mismo método chat que el cliente real, pero en vez de llamar a una API devuelve respuestas fijas. Se activa con LLM_PROVIDER=fake. La función create_client de llm_client.py escoge cuál de los dos usar, y chatbot.py y structured.py la usan para crear el cliente. Con el cliente falso se hicieron 8 pruebas en pytest, que revisan el orden de build_messages, que analyze_question clasifique bien las preguntas, y que el programa detecte un texto que no es JSON y un JSON con un valor que no se permite. Las 8 pasan en menos de un segundo, sin internet y sin API key.
+
+Esto se pudo hacer porque el chatbot solo conoce el método chat y el LLMResponse. No sabe si detrás hay un modelo real o uno falso, entonces se pudo cambiar uno por otro sin tocar el chatbot. Además, con el cliente falso se pudieron probar errores que con un modelo real casi nunca pasan, como un JSON mal escrito.
 
 ## 3. Conclusiones
 
-¿Dónde vive la memoria del chatbot si la API no recuerda nada, y qué pasa con el costo y la latencia? En el programa: la lista history de chatbot.py. En cada turno se reenvía toda la conversación y el modelo la vuelve a leer; sin el TODO 5 no recordaba nada y con /reiniciar todo se pierde. Por eso los tokens de entrada crecen en cada turno (de 314 a 535 en la prueba 3), y con ellos el costo y el tiempo de respuesta. Si se supera la ventana de contexto, el proveedor devuelve un error o recorta los mensajes más viejos, y se podría perder el prompt de sistema. La solución es guardar solo los últimos turnos o resumir los antiguos.
+¿Dónde vive la memoria del chatbot si la API no recuerda nada, y qué pasa con el costo y la latencia? La memoria vive en el programa, en la lista history de chatbot.py. La API no guarda nada, entonces en cada turno se le manda otra vez toda la conversación, y el modelo "recuerda" solo porque la vuelve a leer. Por eso, sin el TODO 5 el chatbot no sabía qué se le había preguntado, y con /reiniciar se pierde todo. El problema es que la conversación pesa más en cada turno: en la prueba 3 los tokens de entrada pasaron de 314 a 535. Como se paga por token, cada turno cuesta más que el anterior, y también tarda más, porque el modelo tiene que leer más texto. Si la conversación pasa la ventana de contexto, que es lo máximo que el modelo puede leer, el proveedor puede dar un error o borrar los mensajes más viejos, y ahí se podría perder el prompt de sistema. Para evitarlo se pueden guardar solo los últimos turnos, o resumir los más viejos.
 
-¿Qué diferencia hay entre una instrucción en system y en user, y puede el usuario contradecir el prompt de sistema? El mensaje system se envía en todas las peticiones y fija el comportamiento general; una instrucción en user solo aplica a esa pregunta. Sí puede contradecirlo en parte: cuando se le pidió inventar la fecha del parcial se negó, pero cuando se le pidió responder en inglés lo hizo, aunque el prompt exigía español. El prompt de sistema pesa más, pero no es una garantía; lo importante hay que validarlo en el código.
+¿Qué diferencia hay entre una instrucción en system y en user, y puede el usuario contradecir el prompt de sistema? El mensaje system se manda en todas las peticiones y dice cómo debe portarse el asistente siempre. Una instrucción en user, en cambio, solo sirve para esa pregunta. Se vio con el prompt que traía el código: el modelo ni sabía que era el asistente de un curso, y con el prompt final sí lo sabía sin que el usuario se lo dijera. Para ver si el usuario lo puede contradecir se hicieron dos pruebas. Cuando se le pidió inventar la fecha del parcial, se negó. Pero cuando se le pidió responder en inglés, respondió en inglés, aunque el prompt decía que siempre en español. Entonces sí se puede contradecir, sobre todo en cosas de forma como el idioma. El prompt de sistema pesa más, pero no asegura nada, y por eso lo importante también hay que revisarlo en el código.
 
-¿Cómo se relaciona la temperatura con el muestreo de tokens, y qué temperatura usar en structured.py? La temperatura modifica las probabilidades de los tokens antes de escoger el siguiente. Con 0 casi siempre sale el más probable, por eso los tres intentos dieron los mismos nombres; con 1.2 las probabilidades se emparejan y salen tokens menos probables, por eso cada intento dio nombres distintos. En structured.py se usa 0, porque se necesita un formato exacto y que la misma pregunta se clasifique siempre igual.
+¿Cómo se relaciona la temperatura con la forma en que el modelo escoge los tokens, y qué temperatura usar en structured.py? El modelo calcula qué tan probable es cada token para ir después, y luego escoge uno. La temperatura cambia esas probabilidades antes de escoger. Con temperatura 0 casi siempre sale el token más probable, y por eso los tres intentos dieron los mismos nombres. Con 1.2 las probabilidades se parecen más entre sí, entonces salen tokens que antes casi no salían, y como cada token cambia lo que viene después, cada intento terminó con nombres distintos. En structured.py conviene usar 0, que es lo que ya usa el código, porque ahí no se busca creatividad. Se busca que el JSON salga siempre bien escrito, y que la misma pregunta se clasifique siempre igual.
 
-¿Por qué revisar finish_reason antes de mostrar o procesar la respuesta? Porque indica si la respuesta está completa. Con length se cortó aunque parezca normal: en la prueba 4 quedó en "...ambos basados en bloques", y con qwen3 y nex-n2.5-pro llegó vacía. Usarla así daría una respuesta a medias o un JSON que no se puede leer. Con ese campo el programa puede avisar, pedir que continúe o repetir con más tokens.
+¿Por qué revisar finish_reason antes de mostrar o usar la respuesta? Porque dice si la respuesta está completa o no. Si dice stop, el modelo terminó solo. Si dice length, la respuesta se cortó, aunque a simple vista parezca normal. En la prueba 4 quedó en "...ambos basados en bloques", y con qwen3 y con nex-n2.5-pro la respuesta llegó vacía. Si el programa no revisa este campo, muestra una respuesta a medias como si estuviera bien, o en structured.py intenta leer un JSON cortado que no se puede leer. Revisándolo, el programa puede avisar que la respuesta se cortó, pedir que continúe o volver a intentar con más tokens.
 
-¿Qué archivos cambiarían con un modelo local o con la librería de otro proveedor, y por qué capturar LLMError y no openai.APIError? Para un modelo local, solo config.py y el .env: así se agregó Ollama, y el paso a OpenRouter fue solo en el .env. Para la librería de otro proveedor, solo llm_client.py, que traduciría los mensajes y la respuesta a LLMResponse. Capturar LLMError hace que chatbot.py no dependa de openai: si cambia la librería, el chatbot sigue atrapando los errores. En la prueba 8 los errores 429 de OpenRouter llegaron como LLMError y el chatbot siguió funcionando.
+¿Qué archivos cambiarían con un modelo local o con la librería de otro proveedor, y por qué capturar LLMError y no openai.APIError? Con un modelo local cambian solo config.py y el .env. Así se hizo con Ollama, y para pasar a OpenRouter ni siquiera hubo que tocar config.py, solo el .env. Con la librería propia de otro proveedor cambiaría solo llm_client.py, que tendría que pasar los mensajes al formato de esa librería y convertir la respuesta en un LLMResponse. El resto del programa no se daría cuenta, igual que pasó con el cliente falso. Capturar LLMError sirve para que chatbot.py no dependa de openai. Si mañana se usa otra librería, sus errores tendrán otros nombres, y un chatbot que espera openai.APIError no los atraparía. Esto se vio en la prueba 8: los errores 429 de OpenRouter llegaron como LLMError, y el chatbot mostró el error y siguió funcionando.
 
-¿Quién garantiza que el JSON sea válido, qué pasa si dificultad llega como "media" y por qué separar json.loads de model_validate? El programa, no el modelo. El modelo solo genera texto con forma de JSON; response_format ayuda con la forma, pero no revisa campos ni valores. Si dificultad llega como "media", json.loads lo acepta pero Pydantic lo rechaza porque solo admite basica, intermedia o avanzada, y el programa muestra el error sin usar el dato (se comprobó con el cliente falso). Separar los dos pasos distingue dos fallas distintas: un texto que no es JSON, por ejemplo cortado por length, o un JSON con valores equivocados.
+¿Quién asegura que el JSON sea válido, qué pasa si dificultad llega como "media" y por qué separar json.loads de model_validate? Lo asegura el programa, no el modelo. El modelo solo escribe un texto que se parece a un JSON, y response_format ayuda a que tenga la forma correcta, pero no revisa los campos ni los valores. Si dificultad llega como "media", json.loads lo acepta, porque sí es un JSON, pero Pydantic lo rechaza, porque solo acepta basica, intermedia o avanzada. En ese caso el programa muestra el error y no usa el dato, y esto se probó con el cliente falso. Separar los dos pasos sirve porque son dos errores distintos. Uno es que el modelo no devolvió JSON, por ejemplo porque se cortó por length. El otro es que devolvió JSON, pero con un valor que no sirve. Al saber cuál de los dos pasó, el mensaje de error es más claro, y se puede hacer algo distinto en cada caso.
 
-¿Qué es determinista y qué es probabilístico, y qué corresponde al LLM y qué al software tradicional? Solo el modelo es probabilístico: con la misma pregunta puede responder distinto. config.py, prompts.py y chatbot.py son deterministas. llm_client.py es la frontera: su código es determinista, pero el texto que devuelve viene del modelo. En structured.py la respuesta es probabilística y la validación con json.loads y Pydantic es determinista. El cliente falso y sus pruebas son deterministas. El software tradicional es todo lo que rodea al modelo para controlarlo y revisar lo que produce.
+¿Qué es determinista y qué es probabilístico, y qué le toca al LLM y qué al software tradicional? Determinista quiere decir que con lo mismo siempre da lo mismo, y probabilístico, que puede dar algo distinto cada vez. La única parte probabilística es el modelo, que con la misma pregunta puede responder diferente, como se vio con la temperatura. config.py, prompts.py y chatbot.py son deterministas, porque siempre leen la configuración, arman los mensajes y manejan la conversación de la misma forma. llm_client.py está en el medio: su código es determinista, pero el texto que devuelve lo escribe el modelo. En structured.py pasa algo parecido, la respuesta del modelo puede cambiar, pero la revisión con json.loads y Pydantic siempre funciona igual. El cliente falso y sus pruebas también son deterministas. En resumen, al LLM le toca escribir el texto, y al software tradicional le toca todo lo demás: prepararle los mensajes, controlarlo y revisar lo que devuelve.
 
-¿Por qué el modelo no puede saber la fecha del parcial aunque sea muy grande, y qué haría falta? Porque esa información no está ni en su entrenamiento ni en los mensajes que recibe. Un modelo más grande sabe más cosas generales, pero no conoce documentos del curso que nunca vio; si respondiera, inventaría. Falta un componente que busque en los documentos del curso y le envíe al modelo lo encontrado junto con la pregunta, lo que se conoce como RAG (generación aumentada por recuperación). El campo requiere_documentos_del_curso de structured.py podría decidir cuándo hacer esa búsqueda.
+¿Por qué el modelo no puede saber la fecha del parcial aunque sea muy grande, y qué haría falta? Porque esa fecha no está en ninguna parte a la que el modelo tenga acceso. El modelo solo sabe lo que aprendió cuando lo entrenaron, que es información pública de internet hasta cierta fecha, y lo que se le manda en los mensajes. La fecha del parcial de este curso no está en internet, y tampoco se le mandó en los mensajes. Un modelo más grande sabe más cosas generales, pero no puede saber algo que nunca vio, y si respondiera, lo único que podría hacer es inventar una fecha. Para que pudiera responder, haría falta una parte que busque en los documentos del curso, como el programa o el cronograma, y le mande al modelo lo que encuentre junto con la pregunta. Esto se llama RAG (generación aumentada por recuperación). El campo requiere_documentos_del_curso de structured.py podría servir para decidir cuándo hay que hacer esa búsqueda.
 
 ## 4. Referencias
 
