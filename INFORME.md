@@ -259,13 +259,13 @@ Se hizo el reto del proveedor falso. FakeLLMClient tiene el mismo método chat q
 
 Ollama. (s. f.). *Ollama*. https://ollama.com
 
-OpenAI. (s. f.). *Chat Completions API reference*. https://platform.openai.com/docs/api-reference/chat
+OpenAI. (s. f.). *Chat. OpenAI API Reference*. https://developers.openai.com/api/reference/resources/chat
 
-OpenRouter. (s. f.). *OpenRouter documentation*. https://openrouter.ai/docs
+OpenRouter. (s. f.). *OpenRouter Quickstart Guide*. https://openrouter.ai/docs/quickstart
 
 Pinzón, O. (2026). *ai-systems-lab-students* [Repositorio]. GitHub. https://github.com/ProfOmarPinzon/ai-systems-lab-students
 
-Pydantic. (s. f.). *Pydantic documentation*. https://docs.pydantic.dev/latest/
+Pydantic. (s. f.). *Pydantic Validation*. https://docs.pydantic.dev/latest/
 
 pytest. (s. f.). *pytest documentation*. https://docs.pytest.org/
 
