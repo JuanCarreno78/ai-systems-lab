@@ -6,7 +6,7 @@ como cualquier otro código.
 
 from llm_client import Message
 
-# TODO 4: prompt con el rol, el idioma, el nivel de los estudiantes y la regla de no inventar datos del curso.
+# TODO 4: rol, idioma, nivel de los estudiantes y no inventar datos del curso.
 SYSTEM_PROMPT = """Eres el Asistente Inteligente del curso universitario "Fundamentos de Inteligencia Artificial".
 Responde siempre en español, con un tono claro y cercano.
 
@@ -36,7 +36,7 @@ escribe "No tengo esa información"."""
 
 def build_messages(history: list[Message], user_input: str) -> list[Message]:
     """Construye lo que realmente recibe el LLM: system + historial + pregunta actual."""
-    # TODO 3: primero el mensaje de sistema, luego el historial y al final la pregunta nueva.
+    # TODO 3: sistema, historial y pregunta nueva, en ese orden.
     return [
         {"role": "system", "content": SYSTEM_PROMPT},
         *history,

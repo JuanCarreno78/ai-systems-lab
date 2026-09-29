@@ -12,5 +12,5 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "pytest>=8",  # se agregó para las pruebas del reto opcional
+    "pytest>=8",  # pruebas del reto opcional
 ]

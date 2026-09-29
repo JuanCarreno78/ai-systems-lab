@@ -18,8 +18,8 @@ PROVIDER_BASE_URLS = {
     "openrouter": "https://openrouter.ai/api/v1",
     "openai": "https://api.openai.com/v1",
     "deepseek": "https://api.deepseek.com/v1",
-    "ollama": "http://localhost:11434/v1",  # se agregó para usar un modelo local; no revisa la clave
-    "fake": "",  # se agregó para el reto opcional (pruebas sin API)
+    "ollama": "http://localhost:11434/v1",  # modelo local, no revisa la clave
+    "fake": "",  # cliente falso para pruebas
 }
 
 
@@ -31,7 +31,7 @@ class Settings:
     model: str
     temperature: float
     max_tokens: int
-    reasoning_effort: str | None = None  # se agregó para los modelos que "piensan" antes de responder
+    reasoning_effort: str | None = None  # solo para modelos de razonamiento
 
 
 def load_settings() -> Settings:

@@ -33,8 +33,7 @@ def analyze_question(client: LLMClient, question: str) -> QuestionAnalysis:
     response = client.chat(messages, temperature=0, json_mode=True)
     print(f"Texto crudo del LLM:\n{response.text}\n")
 
-    # TODO 6: primero se revisa que el texto sea JSON y después que tenga los campos correctos,
-    # así se sabe cuál de los dos pasos falló.
+    # TODO 6: parseo y validación por separado, para saber cuál de los dos falla.
     data = json.loads(response.text)
     return QuestionAnalysis.model_validate(data)
 

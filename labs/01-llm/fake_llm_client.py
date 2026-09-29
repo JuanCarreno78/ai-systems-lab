@@ -1,7 +1,6 @@
-"""Cliente falso hecho para el reto opcional.
+"""Cliente falso para pruebas (LLM_PROVIDER=fake).
 
-Tiene el mismo método chat que LLMClient, pero devuelve respuestas fijas en lugar de llamar a
-una API. Se usó para probar el programa sin internet ni costo (LLM_PROVIDER=fake).
+Mismo método chat que LLMClient, con respuestas fijas y sin llamar a ninguna API.
 """
 
 import json
@@ -9,7 +8,7 @@ import json
 from config import Settings
 from llm_client import LLMResponse, Message
 
-# Palabras que indican que la pregunta depende de información propia del curso.
+# Palabras que indican una pregunta sobre el curso.
 COURSE_KEYWORDS = ("parcial", "examen", "nota", "fecha", "entrega", "programa", "cronograma", "curso")
 
 
@@ -17,7 +16,7 @@ class FakeLLMClient:
     def __init__(self, settings: Settings | None = None, responses: list[str] | None = None):
         self.settings = settings
         self._responses = list(responses or [])  # respuestas fijas, en orden
-        self.calls: list[dict] = []  # peticiones recibidas, para revisarlas en las pruebas
+        self.calls: list[dict] = []  # peticiones recibidas
 
     def chat(
         self,
