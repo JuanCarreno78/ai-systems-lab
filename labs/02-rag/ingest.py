@@ -31,7 +31,7 @@ def main() -> None:
 
     chunks = chunk_documents(documents, settings.chunk_size, settings.chunk_overlap)
     print(
-        f"{len(documents)} documentos → {len(chunks)} chunks "
+        f"{len(documents)} documentos -> {len(chunks)} chunks "
         f"(chunk_size={settings.chunk_size}, overlap={settings.chunk_overlap} palabras)"
     )
     if show:

@@ -1,0 +1,85 @@
+﻿> uv run python labs/02-rag/search.py ¿Cómo pido un supletorio?
+
+Búsqueda semántica (similitud coseno) | top 4 de 25 fragmentos
+
+1. score=0.139  [programa.md#2]
+   los martes y jueves de 6:00 p. m. a 8:00 p. m. en el salón B-204. El horario de asesoría es los miércoles de 5:00 p. m. a 6:00 p. m., de forma virtual en el equ...
+
+2. score=0.130  [politicas.md#4]
+   de la nota del laboratorio, y el estudiante debe revocar la clave de inmediato en la consola del proveedor. ## Reclamos de notas Los reclamos sobre una califica...
+
+3. score=0.108  [evaluacion.md#4]
+   En la sustentación cualquier integrante del grupo debe poder explicar cualquier parte del código. ## Supletorios Quien no presente un parcial por una causa just...
+
+4. score=0.106  [faq-labs.md#0]
+   # Preguntas frecuentes sobre los laboratorios ## ¿Qué necesito instalar para los laboratorios? Se necesita Python 3.11 o superior y uv, el gestor de entornos y ...
+
+
+> uv run python labs/02-rag/search.py --keyword ¿Cómo pido un supletorio?
+
+Búsqueda por palabras clave (fracción de palabras de la pregunta presentes) | top 4 de 25 fragmentos
+
+1. score=0.333  [evaluacion.md#4]
+   En la sustentación cualquier integrante del grupo debe poder explicar cualquier parte del código. ## Supletorios Quien no presente un parcial por una causa just...
+
+2. score=0.333  [programa.md#0]
+   # Programa del curso de Inteligencia Artificial ## Descripción El curso de Inteligencia Artificial es una asignatura de los programas de Ingeniería de Sistemas ...
+
+3. score=0.333  [programa.md#1]
+   termina con una unidad aplicada sobre cómo construir sistemas de software que usan modelos de lenguaje. ## Docente y horarios La docente del curso es la profeso...
+
+4. score=0.000  [anuncios.md#0]
+   # Anuncios del curso de Inteligencia Artificial ## Anuncio del 30 de septiembre de 2026: cambio en el horario de asesoría Desde el lunes 5 de octubre de 2026, l...
+
+
+> uv run python labs/02-rag/search.py ¿Y el segundo?
+
+Búsqueda semántica (similitud coseno) | top 4 de 25 fragmentos
+
+1. score=0.290  [anuncios.md#1]
+   miércoles. ## Anuncio del 28 de septiembre de 2026: cambio de fecha del primer parcial Por la jornada institucional de investigación, el primer parcial se trasl...
+
+2. score=0.258  [anuncios.md#2]
+   de septiembre de 2026: publicación del laboratorio 2 Ya está publicado el laboratorio 2, sobre RAG (generación aumentada por recuperación), en el repositorio de...
+
+3. score=0.255  [evaluacion.md#2]
+   jueves 26 de noviembre de 2026 a las 6:00 p. m., también en el salón B-204. El segundo parcial evalúa las unidades 4 y 5: procesamiento de lenguaje natural, Tra...
+
+4. score=0.222  [evaluacion.md#1]
+   primer parcial se realizará el jueves 15 de octubre de 2026 a las 6:00 p. m., de forma presencial en el salón B-204. El primer parcial evalúa las unidades 1, 2 ...
+
+
+> uv run python labs/02-rag/search.py ¿Qué clases hay en el salón B-204?
+
+Búsqueda semántica (similitud coseno) | top 4 de 25 fragmentos
+
+1. score=0.522  [programa.md#1]
+   termina con una unidad aplicada sobre cómo construir sistemas de software que usan modelos de lenguaje. ## Docente y horarios La docente del curso es la profeso...
+
+2. score=0.494  [evaluacion.md#1]
+   primer parcial se realizará el jueves 15 de octubre de 2026 a las 6:00 p. m., de forma presencial en el salón B-204. El primer parcial evalúa las unidades 1, 2 ...
+
+3. score=0.456  [evaluacion.md#2]
+   jueves 26 de noviembre de 2026 a las 6:00 p. m., también en el salón B-204. El segundo parcial evalúa las unidades 4 y 5: procesamiento de lenguaje natural, Tra...
+
+4. score=0.434  [evaluacion.md#0]
+   # Evaluación del curso de Inteligencia Artificial ## Distribución de la nota La nota final del curso se calcula así: primer parcial 20 %, segundo parcial 20 %, ...
+
+
+> uv run python labs/02-rag/search.py --keyword ¿Qué clases hay en el salón B-204?
+
+Búsqueda por palabras clave (fracción de palabras de la pregunta presentes) | top 4 de 25 fragmentos
+
+1. score=1.000  [programa.md#1]
+   termina con una unidad aplicada sobre cómo construir sistemas de software que usan modelos de lenguaje. ## Docente y horarios La docente del curso es la profeso...
+
+2. score=0.500  [anuncios.md#1]
+   miércoles. ## Anuncio del 28 de septiembre de 2026: cambio de fecha del primer parcial Por la jornada institucional de investigación, el primer parcial se trasl...
+
+3. score=0.500  [evaluacion.md#1]
+   primer parcial se realizará el jueves 15 de octubre de 2026 a las 6:00 p. m., de forma presencial en el salón B-204. El primer parcial evalúa las unidades 1, 2 ...
+
+4. score=0.500  [evaluacion.md#2]
+   jueves 26 de noviembre de 2026 a las 6:00 p. m., también en el salón B-204. El segundo parcial evalúa las unidades 4 y 5: procesamiento de lenguaje natural, Tra...
+
+

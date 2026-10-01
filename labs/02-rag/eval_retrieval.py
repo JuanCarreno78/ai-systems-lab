@@ -37,7 +37,7 @@ def main() -> None:
     documentos = load_documents(settings.data_dir)
     embedder = Embedder(settings.embedding_model)
 
-    print(f"{len(casos)} preguntas · modelo {settings.embedding_model}\n")
+    print(f"{len(casos)} preguntas | modelo {settings.embedding_model}\n")
     print(f"{'chunk:solapamiento':>19} {'chunks':>7} " + " ".join(f"{'hit@' + str(k):>7}" for k in KS))
     detalle = {}
     for size, overlap in configs:

@@ -53,8 +53,8 @@ def main() -> None:
     )
     history: list[Message] = []
 
-    print(f"Asistente del Curso de IA + RAG  ({settings.provider} · {settings.model})")
-    print(f"Índice: {len(store)} fragmentos · top_k={rag.top_k} · min_score={rag.min_score}")
+    print(f"Asistente del Curso de IA + RAG  ({settings.provider} | {settings.model})")
+    print(f"Índice: {len(store)} fragmentos | top_k={rag.top_k} | min_score={rag.min_score}")
     print("Comandos: /reiniciar  /salir\n")
 
     while True:
@@ -87,7 +87,7 @@ def main() -> None:
             print(f"Fuentes: {', '.join(sorted({r.chunk.source for r in answer.sources}))}\n")
         if debug:
             print(
-                f"[finish_reason={answer.response.finish_reason} · "
+                f"[finish_reason={answer.response.finish_reason} | "
                 f"tokens entrada={answer.response.prompt_tokens} "
                 f"salida={answer.response.completion_tokens}]\n"
             )

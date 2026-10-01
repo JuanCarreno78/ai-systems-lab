@@ -53,7 +53,7 @@ def main() -> None:
         embedder = Embedder(store.embedding_model)
         results = store.search(embedder.embed_query(question), settings.top_k)
 
-    print(f"\nBúsqueda {label} · top {settings.top_k} de {len(store)} fragmentos\n")
+    print(f"\nBúsqueda {label} | top {settings.top_k} de {len(store)} fragmentos\n")
     for rank, result in enumerate(results, start=1):
         print(f"{rank}. score={result.score:.3f}  [{result.chunk.id}]")
         print(f"   {result.chunk.text[:160]}...\n")
