@@ -1,0 +1,22 @@
+﻿> uv run python labs/02-rag/chatbot.py --debug   (prueba 6)
+Asistente del Curso de IA + RAG  (ollama · qwen3:8b)
+Índice: 24 fragmentos · top_k=4 · min_score=0.4
+Comandos: /reiniciar  /salir
+
+Tú: ¿Cuál es el correo de la profesora?
+
+--- Fragmentos recuperados ---
+[1] score=0.552  programa.md#1: termina con una unidad aplicada sobre cómo construir sistemas de softw...
+[2] score=0.408  politicas.md#4: de la nota del laboratorio, y el estudiante debe revocar la clave de i...
+--- Mensajes enviados al LLM ---
+[system] (1516 caracteres) Eres el Asistente Inteligente del Curso de Inteligencia Artificial de Ingeniería
+[user] (1055 caracteres) Fragmentos recuperados de los documentos del curso:  [1] (programa.md) termina c
+--------------------------------
+
+Asistente: No encontré esa información en los documentos del curso. Si necesitas contactar a la profesora, utiliza el canal oficial de comunicación del curso, que es el equipo de Microsoft Teams del curso [1].
+
+Fuentes: politicas.md, programa.md
+
+[finish_reason=stop · tokens entrada=694 salida=43]
+
+

@@ -1,0 +1,4 @@
+﻿> uv run python labs/02-rag/documents.py
+uno dos tres cuatro
+cuatro cinco seis siete
+siete ocho nueve diez

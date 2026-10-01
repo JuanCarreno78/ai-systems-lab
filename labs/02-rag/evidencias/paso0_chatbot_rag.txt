@@ -1,0 +1,19 @@
+﻿# Paso 0, comparacion: las mismas preguntas en el chatbot RAG (configuracion final)
+> uv run python labs/02-rag/chatbot.py
+Asistente del Curso de IA + RAG  (ollama · qwen3:8b)
+Índice: 25 fragmentos · top_k=4 · min_score=0.4
+Comandos: /reiniciar  /salir
+
+Tú: ¿Cuándo es el primer parcial?
+
+Asistente: El primer parcial originalmente estaba programado para el jueves 15 de octubre de 2026, pero se cambió a martes 20 de octubre de 2026 debido a la jornada institucional de investigación [1].
+
+Fuentes: anuncios.md, evaluacion.md, programa.md
+
+Tú: ¿Qué pasa si entrego tarde un laboratorio?
+
+Asistente: Si entregas tarde un laboratorio, las entregas extemporáneas se reciben hasta 48 horas después de la fecha límite, con una penalización de 0.5 sobre 5.0 por cada 24 horas de retraso o fracción [2]. Después de 48 horas, la entrega no se recibe y la nota es 0.0. Si hay una causa justificada, se debe informar a la docente antes de la fecha límite.
+
+Fuentes: anuncios.md, evaluacion.md, politicas.md
+
+

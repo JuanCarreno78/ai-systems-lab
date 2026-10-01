@@ -1,0 +1,19 @@
+﻿> uv run python labs/02-rag/chatbot.py --debug   (prueba 7, con TODO 6 y RAG_MIN_SCORE=0.40)
+Asistente del Curso de IA + RAG  (ollama · qwen3:8b)
+Índice: 24 fragmentos · top_k=4 · min_score=0.4
+Comandos: /reiniciar  /salir
+
+Tú: Dame una receta de arepas
+
+--- Fragmentos recuperados ---
+(ninguno supera RAG_MIN_SCORE)
+--- Mensajes enviados al LLM ---
+[system] (1516 caracteres) Eres el Asistente Inteligente del Curso de Inteligencia Artificial de Ingeniería
+[user] (175 caracteres) Fragmentos recuperados de los documentos del curso:  (No se encontraron fragment
+--------------------------------
+
+Asistente: Esto no está en los documentos del curso, pero en general: las arepas son un alimento tradicional de Venezuela hecho con harina de maíz, agua, sal y levadura. Se preparan mezclando los ingredientes, dejando fermentar, formando bolitas y cocinándolas en aceite hasta que estén doradas y crujientes. Puedes servirlas con carne asada, pollo o cualquier acompañamiento típico de la región.
+
+[finish_reason=stop · tokens entrada=446 salida=105]
+
+

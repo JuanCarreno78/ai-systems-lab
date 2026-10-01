@@ -1,0 +1,16 @@
+> uv run python labs/02-rag/search.py "¿Cuándo es el primer parcial?"
+
+Búsqueda semántica (similitud coseno) · top 4 de 24 fragmentos
+
+1. score=0.604  [evaluacion.md#1]
+   primer parcial se realizará el jueves 15 de octubre de 2026 a las 6:00 p. m., de forma presencial en el salón B-204. El primer parcial evalúa las unidades 1, 2 ...
+
+2. score=0.579  [anuncios.md#0]
+   # Anuncios del curso de Inteligencia Artificial ## Anuncio del 28 de septiembre de 2026: cambio de fecha del primer parcial Por la jornada institucional de inve...
+
+3. score=0.514  [programa.md#2]
+   los martes y jueves de 6:00 p. m. a 8:00 p. m. en el salón B-204. El horario de asesoría es los miércoles de 5:00 p. m. a 6:00 p. m., de forma virtual en el equ...
+
+4. score=0.444  [evaluacion.md#3]
+   por semana; cada uno se entrega en la tarea de Teams correspondiente antes de la fecha límite indicada en la tarea. ## Proyecto final El proyecto final se desar...
+

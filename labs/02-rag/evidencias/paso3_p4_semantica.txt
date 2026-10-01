@@ -1,0 +1,16 @@
+> uv run python labs/02-rag/search.py "¿Qué significa el error 429?"
+
+Búsqueda semántica (similitud coseno) · top 4 de 24 fragmentos
+
+1. score=0.588  [faq-labs.md#2]
+   está mal copiada, fue revocada o corresponde a otro proveedor distinto al configurado en LLM_PROVIDER. Hay que revisar que la clave y el proveedor coincidan. ##...
+
+2. score=0.366  [faq-labs.md#1]
+   dice "Falta LLM_API_KEY" El archivo .env no existe o no tiene la clave. Hay que copiar .env.example como .env y escribir la API key del proveedor en la variable...
+
+3. score=0.288  [politicas.md#3]
+   puede explicarla en la revisión, la nota de esa parte será 0.0. Presentar como propio trabajo de otra persona se considera fraude académico. ## Seguridad de las...
+
+4. score=0.241  [politicas.md#4]
+   de la nota del laboratorio, y el estudiante debe revocar la clave de inmediato en la consola del proveedor. ## Reclamos de notas Los reclamos sobre una califica...
+

@@ -1,0 +1,25 @@
+﻿# Paso 8 / prueba 9, ANTES: anuncio nuevo ya agregado a anuncios.md, sin volver a ejecutar ingest.py
+> uv run python labs/02-rag/chatbot.py --debug
+Asistente del Curso de IA + RAG  (ollama · qwen3:8b)
+Índice: 24 fragmentos · top_k=4 · min_score=0.4
+Comandos: /reiniciar  /salir
+
+Tú: ¿Cuál es el horario de asesoría?
+
+--- Fragmentos recuperados ---
+[1] score=0.697  programa.md#2: los martes y jueves de 6:00 p. m. a 8:00 p. m. en el salón B-204. El h...
+[2] score=0.513  politicas.md#4: de la nota del laboratorio, y el estudiante debe revocar la clave de i...
+[3] score=0.502  programa.md#1: termina con una unidad aplicada sobre cómo construir sistemas de softw...
+[4] score=0.500  politicas.md#0: # Políticas del curso de Inteligencia Artificial ## Entregas extemporá...
+--- Mensajes enviados al LLM ---
+[system] (1516 caracteres) Eres el Asistente Inteligente del Curso de Inteligencia Artificial de Ingeniería
+[user] (2011 caracteres) Fragmentos recuperados de los documentos del curso:  [1] (programa.md) los marte
+--------------------------------
+
+Asistente: El horario de asesoría es los miércoles de 5:00 p. m. a 6:00 p. m., de forma virtual en el equipo de Teams del curso [1].
+
+Fuentes: politicas.md, programa.md
+
+[finish_reason=stop · tokens entrada=997 salida=46]
+
+

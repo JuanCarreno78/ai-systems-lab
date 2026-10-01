@@ -1,0 +1,66 @@
+﻿> uv run python labs/02-rag/chatbot.py --debug   (SYSTEM_PROMPT original, sin reglas de grounding)
+Asistente del Curso de IA + RAG  (ollama · qwen3:8b)
+Índice: 24 fragmentos · top_k=4 · min_score=0.35
+Comandos: /reiniciar  /salir
+
+Tú: ¿Cuántos créditos tiene el curso?
+
+--- Fragmentos recuperados ---
+[1] score=0.537  evaluacion.md#0: # Evaluación del curso de Inteligencia Artificial ## Distribución de l...
+[2] score=0.450  programa.md#1: termina con una unidad aplicada sobre cómo construir sistemas de softw...
+[3] score=0.439  evaluacion.md#3: por semana; cada uno se entrega en la tarea de Teams correspondiente a...
+[4] score=0.438  programa.md#2: los martes y jueves de 6:00 p. m. a 8:00 p. m. en el salón B-204. El h...
+--- Mensajes enviados al LLM ---
+[system] (420 caracteres) Eres el Asistente Inteligente del Curso de Inteligencia Artificial de Ingeniería
+[user] (1990 caracteres) Fragmentos recuperados de los documentos del curso:  [1] (evaluacion.md) # Evalu
+--------------------------------
+
+Asistente: Los documentos proporcionados no mencionan la cantidad de créditos del curso.
+
+Fuentes: evaluacion.md, programa.md
+
+[finish_reason=stop · tokens entrada=720 salida=17]
+
+Tú: ¿Cuál es el correo de la profesora?
+
+--- Fragmentos recuperados ---
+[1] score=0.552  programa.md#1: termina con una unidad aplicada sobre cómo construir sistemas de softw...
+[2] score=0.408  politicas.md#4: de la nota del laboratorio, y el estudiante debe revocar la clave de i...
+[3] score=0.346  evaluacion.md#0: # Evaluación del curso de Inteligencia Artificial ## Distribución de l...
+[4] score=0.336  politicas.md#2: permite usar asistentes de IA generativa (chatbots y asistentes de pro...
+--- Mensajes enviados al LLM ---
+[system] (420 caracteres) Eres el Asistente Inteligente del Curso de Inteligencia Artificial de Ingeniería
+[user] (33 caracteres) ¿Cuántos créditos tiene el curso?
+[assistant] (77 caracteres) Los documentos proporcionados no mencionan la cantidad de créditos del curso.
+[user] (1995 caracteres) Fragmentos recuperados de los documentos del curso:  [1] (programa.md) termina c
+--------------------------------
+
+Asistente: Los documentos no mencionan el correo de la profesora Laura Méndez. Se indica que el canal oficial de comunicación es el equipo de Microsoft Teams del curso, y que los correos personales no se usan para trámites del curso.
+
+Fuentes: evaluacion.md, politicas.md, programa.md
+
+[finish_reason=stop · tokens entrada=725 salida=53]
+
+Tú: ¿Qué es el mecanismo de atención?
+
+--- Fragmentos recuperados ---
+[1] score=0.347  politicas.md#2: permite usar asistentes de IA generativa (chatbots y asistentes de pro...
+[2] score=0.341  programa.md#3: artificial: agentes, búsqueda y representación del conocimiento (seman...
+[3] score=0.273  politicas.md#1: a la docente antes de la fecha límite. ## Trabajo individual y en pare...
+[4] score=0.234  programa.md#4: sistemas orquestados con LLM: uso de LLM mediante API, RAG, herramient...
+--- Mensajes enviados al LLM ---
+[system] (420 caracteres) Eres el Asistente Inteligente del Curso de Inteligencia Artificial de Ingeniería
+[user] (33 caracteres) ¿Cuántos créditos tiene el curso?
+[assistant] (77 caracteres) Los documentos proporcionados no mencionan la cantidad de créditos del curso.
+[user] (35 caracteres) ¿Cuál es el correo de la profesora?
+[assistant] (222 caracteres) Los documentos no mencionan el correo de la profesora Laura Méndez. Se indica qu
+[user] (2154 caracteres) Fragmentos recuperados de los documentos del curso:  [1] (politicas.md) permite 
+--------------------------------
+
+Asistente: El mecanismo de atención es una técnica clave en el procesamiento de lenguaje natural (NLP) que permite a los modelos de lenguaje, como los Transformers, enfocarse selectivamente en partes relevantes de la entrada. En el contexto de los Transformers, el mecanismo de atención calcula ponderaciones que indican la importancia de cada palabra o token en relación con otros, facilitando la captura de dependencias y relaciones semánticas en el texto. Este mecanismo es fundamental para la eficacia de arquitecturas como la atención por pares (self-attention) y es esencial para el funcionamiento de los modelos de lenguaje de gran escala.
+
+Fuentes: politicas.md, programa.md
+
+[finish_reason=stop · tokens entrada=832 salida=148]
+
+

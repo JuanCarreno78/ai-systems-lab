@@ -1,0 +1,21 @@
+> uv run python labs/02-rag/chatbot.py --debug
+Asistente del Curso de IA + RAG  (ollama · qwen3:8b)
+Índice: 24 fragmentos · top_k=1 · min_score=0.4
+Comandos: /reiniciar  /salir
+
+Tú: ¿Cuándo es el primer parcial?
+
+--- Fragmentos recuperados ---
+[1] score=0.604  evaluacion.md#1: primer parcial se realizará el jueves 15 de octubre de 2026 a las 6:00...
+--- Mensajes enviados al LLM ---
+[system] (1516 caracteres) Eres el Asistente Inteligente del Curso de Inteligencia Artificial de Ingeniería
+[user] (556 caracteres) Fragmentos recuperados de los documentos del curso:  [1] (evaluacion.md) primer 
+--------------------------------
+
+Asistente: El primer parcial se realizará el jueves 15 de octubre de 2026 a las 6:00 p. m. [1].
+
+Fuentes: evaluacion.md
+
+[finish_reason=stop · tokens entrada=591 salida=37]
+
+

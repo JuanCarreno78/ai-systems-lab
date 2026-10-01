@@ -1,0 +1,16 @@
+> uv run python labs/02-rag/search.py "¿Puedo usar ChatGPT en los laboratorios?"
+
+Búsqueda semántica (similitud coseno) · top 4 de 24 fragmentos
+
+1. score=0.522  [politicas.md#2]
+   permite usar asistentes de IA generativa (chatbots y asistentes de programación, por ejemplo ChatGPT, Claude o GitHub Copilot) como apoyo para aprender y para e...
+
+2. score=0.461  [faq-labs.md#3]
+   a un modelo más pequeño en LLM_MODEL. ## ¿Puedo usar otro proveedor u otro modelo? Sí. Los laboratorios funcionan con Groq, OpenRouter, OpenAI y DeepSeek. Para ...
+
+3. score=0.446  [programa.md#4]
+   sistemas orquestados con LLM: uso de LLM mediante API, RAG, herramientas y MCP, agentes y orquestación (semanas 13 a 16). Esta unidad se trabaja con un laborato...
+
+4. score=0.404  [politicas.md#1]
+   a la docente antes de la fecha límite. ## Trabajo individual y en parejas Los laboratorios se pueden desarrollar de forma individual o en parejas. Si se trabaja...
+

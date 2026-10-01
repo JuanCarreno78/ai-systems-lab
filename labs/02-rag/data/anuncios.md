@@ -1,5 +1,10 @@
 # Anuncios del curso de Inteligencia Artificial
 
+## Anuncio del 30 de septiembre de 2026: cambio en el horario de asesoría
+
+Desde el lunes 5 de octubre de 2026, la asesoría del curso pasa a los viernes de 4:00 p. m. a
+5:00 p. m., de forma virtual en el equipo de Teams del curso. Ya no habrá asesoría los miércoles.
+
 ## Anuncio del 28 de septiembre de 2026: cambio de fecha del primer parcial
 
 Por la jornada institucional de investigación, el primer parcial se traslada del jueves 15 de

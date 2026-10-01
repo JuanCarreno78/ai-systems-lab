@@ -1,0 +1,13 @@
+﻿> uv run python labs/01-llm/chatbot.py
+Asistente del Curso de IA  (ollama | qwen3:8b)
+Comandos: /reiniciar  /salir
+
+Tú: ¿Cuándo es el primer parcial?
+
+Asistente: No tengo acceso a la información sobre fechas de parciales o entregas del curso. Te sugiero que consultes el programa del curso, la plataforma del curso o directamente al profesor para obtener detalles precisos sobre la fecha del primer parcial.
+
+Tú: ¿Qué pasa si entrego tarde un laboratorio?
+
+Asistente: No tengo acceso a los criterios de evaluación específicos del curso, incluyendo las políticas sobre entregas tardías. Te recomiendo que consultes el programa del curso, la plataforma del curso o contactes directamente al profesor para conocer las consecuencias de entregar un laboratorio con retraso.
+
+

@@ -1,0 +1,6 @@
+> uv run python labs/02-rag/ingest.py   (RAG_CHUNK_SIZE=400, RAG_CHUNK_OVERLAP=50)
+5 documentos → 5 chunks (chunk_size=400, overlap=50 palabras)
+
+Calculando embeddings con sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 ...
+5 vectores de dimensión 384 en 1.2 s
+Índice guardado en C:\Users\JuanDavidCarreñoBelt\Documents\Juan David Carreño Beltran\Sexto Semestre\Fundamentos de Inteligencia Artificial\A2.3 Chatbot con LLM\ai-systems-lab\labs\02-rag\index

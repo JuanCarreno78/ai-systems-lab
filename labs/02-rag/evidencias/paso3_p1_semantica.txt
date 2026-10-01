@@ -1,0 +1,16 @@
+> uv run python labs/02-rag/search.py "¿Qué pasa si entrego tarde un laboratorio?"
+
+Búsqueda semántica (similitud coseno) · top 4 de 24 fragmentos
+
+1. score=0.490  [evaluacion.md#2]
+   jueves 26 de noviembre de 2026 a las 6:00 p. m., también en el salón B-204. El segundo parcial evalúa las unidades 4 y 5: procesamiento de lenguaje natural, Tra...
+
+2. score=0.456  [politicas.md#0]
+   # Políticas del curso de Inteligencia Artificial ## Entregas extemporáneas Las entregas extemporáneas se reciben hasta 48 horas después de la fecha límite, con ...
+
+3. score=0.395  [anuncios.md#1]
+   no cambian. ## Anuncio del 21 de septiembre de 2026: publicación del laboratorio 2 Ya está publicado el laboratorio 2, sobre RAG (generación aumentada por recup...
+
+4. score=0.358  [faq-labs.md#4]
+   se descarga el modelo de embeddings, de unos 220 MB, y se guarda en caché. Las ejecuciones siguientes usan la copia local y no requieren descargarlo de nuevo. #...
+

@@ -1,0 +1,16 @@
+> uv run python labs/02-rag/search.py --keyword "¿Cuándo es el primer parcial?"
+
+Búsqueda por palabras clave (fracción de palabras de la pregunta presentes) · top 4 de 24 fragmentos
+
+1. score=0.667  [anuncios.md#0]
+   # Anuncios del curso de Inteligencia Artificial ## Anuncio del 28 de septiembre de 2026: cambio de fecha del primer parcial Por la jornada institucional de inve...
+
+2. score=0.667  [evaluacion.md#0]
+   # Evaluación del curso de Inteligencia Artificial ## Distribución de la nota La nota final del curso se calcula así: primer parcial 20 %, segundo parcial 20 %, ...
+
+3. score=0.667  [evaluacion.md#1]
+   primer parcial se realizará el jueves 15 de octubre de 2026 a las 6:00 p. m., de forma presencial en el salón B-204. El primer parcial evalúa las unidades 1, 2 ...
+
+4. score=0.333  [evaluacion.md#2]
+   jueves 26 de noviembre de 2026 a las 6:00 p. m., también en el salón B-204. El segundo parcial evalúa las unidades 4 y 5: procesamiento de lenguaje natural, Tra...
+

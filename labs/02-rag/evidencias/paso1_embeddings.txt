@@ -1,0 +1,10 @@
+﻿> uv run python labs/02-rag/embeddings.py
+Modelo: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+Dimensión: 384
+Primeros valores del vector de la pregunta: [ 0.175  0.449  0.294 -0.075  0.249]
+
+Pregunta: ¿Qué pasa si entrego tarde un laboratorio?
+  coseno=0.317  Las entregas extemporáneas tienen una penalización por cada día de retraso.
+  coseno=0.609  Si mandas el lab después de la fecha límite pierdes puntos.
+  coseno=0.079  El primer parcial evalúa las unidades 1, 2 y 3.
+  coseno=0.150  Receta de arepas con queso.

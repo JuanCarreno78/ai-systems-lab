@@ -22,6 +22,7 @@ PROVIDER_BASE_URLS = {
     "openrouter": "https://openrouter.ai/api/v1",
     "openai": "https://api.openai.com/v1",
     "deepseek": "https://api.deepseek.com/v1",
+    "ollama": "http://localhost:11434/v1",  # modelo local, no revisa la clave
 }
 
 LAB_DIR = Path(__file__).resolve().parent
@@ -37,6 +38,7 @@ class Settings:
     model: str
     temperature: float
     max_tokens: int
+    reasoning_effort: str | None = None  # solo para modelos de razonamiento
 
 
 @dataclass(frozen=True)
@@ -74,6 +76,7 @@ def load_settings() -> Settings:
         model=model,
         temperature=float(os.getenv("LLM_TEMPERATURE", "0.3")),
         max_tokens=int(os.getenv("LLM_MAX_TOKENS", "512")),
+        reasoning_effort=os.getenv("LLM_REASONING_EFFORT", "").strip() or None,
     )
 
 

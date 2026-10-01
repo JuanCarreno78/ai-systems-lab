@@ -1,0 +1,16 @@
+> uv run python labs/02-rag/search.py --keyword "¿Qué significa el error 429?"
+
+Búsqueda por palabras clave (fracción de palabras de la pregunta presentes) · top 4 de 24 fragmentos
+
+1. score=1.000  [faq-labs.md#1]
+   dice "Falta LLM_API_KEY" El archivo .env no existe o no tiene la clave. Hay que copiar .env.example como .env y escribir la API key del proveedor en la variable...
+
+2. score=1.000  [faq-labs.md#2]
+   está mal copiada, fue revocada o corresponde a otro proveedor distinto al configurado en LLM_PROVIDER. Hay que revisar que la clave y el proveedor coincidan. ##...
+
+3. score=0.000  [anuncios.md#0]
+   # Anuncios del curso de Inteligencia Artificial ## Anuncio del 28 de septiembre de 2026: cambio de fecha del primer parcial Por la jornada institucional de inve...
+
+4. score=0.000  [anuncios.md#1]
+   no cambian. ## Anuncio del 21 de septiembre de 2026: publicación del laboratorio 2 Ya está publicado el laboratorio 2, sobre RAG (generación aumentada por recup...
+

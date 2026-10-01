@@ -1,0 +1,30 @@
+﻿== Tamaño de chunk (top_k=4, min_score=0.40)
+
+chunk_size=30 overlap=5: 57 chunks | tokens de entrada (primer parcial)=680
+   posición del fragmento correcto:    6 (score 0.391)  ¿Qué pasa si entrego tarde un laboratorio?
+   posición del fragmento correcto:    1 (score 0.614)  ¿Cuándo es el primer parcial?
+   posición del fragmento correcto:    1 (score 0.697)  ¿Puedo usar ChatGPT en los laboratorios?
+   posición del fragmento correcto:    1 (score 0.651)  ¿Qué significa el error 429?
+   respuesta: El primer parcial se trasladó al martes 20 de octubre de 2026, a las 6:00 p. m., debido a la jornada institucional de investigación [1].
+
+chunk_size=80 overlap=20: 24 chunks | tokens de entrada (primer parcial)=1028
+   posición del fragmento correcto:    2 (score 0.456)  ¿Qué pasa si entrego tarde un laboratorio?
+   posición del fragmento correcto:    2 (score 0.579)  ¿Cuándo es el primer parcial?
+   posición del fragmento correcto:    1 (score 0.522)  ¿Puedo usar ChatGPT en los laboratorios?
+   posición del fragmento correcto:    1 (score 0.588)  ¿Qué significa el error 429?
+   respuesta: El primer parcial se realizará el martes 20 de octubre de 2026 a las 6:00 p. m., en el salón B-204 [2]. Este cambio de fecha se debió a la jornada ins
+
+chunk_size=400 overlap=50: 5 chunks | tokens de entrada (primer parcial)=707
+   posición del fragmento correcto:    1 (score 0.400)  ¿Qué pasa si entrego tarde un laboratorio?
+   posición del fragmento correcto:    1 (score 0.575)  ¿Cuándo es el primer parcial?
+   posición del fragmento correcto:    5 (score 0.136)  ¿Puedo usar ChatGPT en los laboratorios?
+   posición del fragmento correcto:    4 (score 0.054)  ¿Qué significa el error 429?
+   respuesta: El primer parcial se realizará el martes 20 de octubre de 2026, a las 6:00 p. m., en el salón B-204 [1].
+
+== top_k (chunk_size=80, overlap=20)
+
+top_k=1: tokens de entrada=591
+   respuesta: El primer parcial se realizará el jueves 15 de octubre de 2026 a las 6:00 p. m. [1].
+
+top_k=8: tokens de entrada=1028
+   respuesta: El primer parcial se realizará el martes 20 de octubre de 2026 a las 6:00 p. m., en el salón B-204 [2]. Este cambio de fecha fue comunicado el 28 de septiembre de 2026 debido a la jornada institucional de investigación [2].

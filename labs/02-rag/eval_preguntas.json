@@ -1,0 +1,12 @@
+[
+  {"pregunta": "¿Qué pasa si entrego tarde un laboratorio?", "documento": "politicas.md"},
+  {"pregunta": "¿Cuál es la nota mínima para aprobar?", "documento": "evaluacion.md"},
+  {"pregunta": "¿Cuántos créditos tiene el curso?", "documento": "programa.md"},
+  {"pregunta": "¿Qué significa el error 429?", "documento": "faq-labs.md"},
+  {"pregunta": "¿Puedo usar ChatGPT en los laboratorios?", "documento": "politicas.md"},
+  {"pregunta": "¿A qué hora son las clases?", "documento": "programa.md"},
+  {"pregunta": "¿Cuándo se entrega el proyecto final?", "documento": "evaluacion.md"},
+  {"pregunta": "¿Qué necesito instalar para los laboratorios?", "documento": "faq-labs.md"},
+  {"pregunta": "¿Cambiaron la fecha del primer parcial?", "documento": "anuncios.md"},
+  {"pregunta": "¿Cómo pido un supletorio?", "documento": "evaluacion.md"}
+]

@@ -1,0 +1,24 @@
+﻿> uv run python labs/02-rag/chatbot.py --debug   (sin TODO 6: no se aplica RAG_MIN_SCORE)
+Asistente del Curso de IA + RAG  (ollama · qwen3:8b)
+Índice: 24 fragmentos · top_k=4 · min_score=0.35
+Comandos: /reiniciar  /salir
+
+Tú: Dame una receta de arepas
+
+--- Fragmentos recuperados ---
+[1] score=0.139  evaluacion.md#1: primer parcial se realizará el jueves 15 de octubre de 2026 a las 6:00...
+[2] score=0.138  anuncios.md#1: no cambian. ## Anuncio del 21 de septiembre de 2026: publicación del l...
+[3] score=0.113  evaluacion.md#3: por semana; cada uno se entrega en la tarea de Teams correspondiente a...
+[4] score=0.099  evaluacion.md#2: jueves 26 de noviembre de 2026 a las 6:00 p. m., también en el salón B...
+--- Mensajes enviados al LLM ---
+[system] (1516 caracteres) Eres el Asistente Inteligente del Curso de Inteligencia Artificial de Ingeniería
+[user] (2041 caracteres) Fragmentos recuperados de los documentos del curso:  [1] (evaluacion.md) primer 
+--------------------------------
+
+Asistente: Esto no está en los documentos del curso, pero en general: las arepas son un alimento tradicional de América Latina, generalmente hechas con harina de maíz, agua, sal y levadura. Se pueden preparar horneándolas o fritas, según la región. Para hacer arepas, mezcla los ingredientes, forma bolitas y cocina hasta que estén doradas y crujientes.
+
+Fuentes: anuncios.md, evaluacion.md
+
+[finish_reason=stop · tokens entrada=998 salida=92]
+
+

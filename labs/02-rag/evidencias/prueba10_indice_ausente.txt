@@ -1,0 +1,6 @@
+﻿# Prueba 10: se borró labs/02-rag/index/
+> uv run python labs/02-rag/chatbot.py
+[índice] No existe el índice en C:\Users\JuanDavidCarreñoBelt\Documents\Juan David Carreño Beltran\Sexto Semestre\Fundamentos de Inteligencia Artificial\A2.3 Chatbot con LLM\ai-systems-lab\labs\02-rag\index. Ejecuta primero ingest.py.
+
+> uv run python labs/02-rag/search.py "¿Cuándo es el primer parcial?"
+[índice] No existe el índice en C:\Users\JuanDavidCarreñoBelt\Documents\Juan David Carreño Beltran\Sexto Semestre\Fundamentos de Inteligencia Artificial\A2.3 Chatbot con LLM\ai-systems-lab\labs\02-rag\index. Ejecuta primero ingest.py.

@@ -1,0 +1,66 @@
+﻿> uv run python labs/02-rag/chatbot.py --debug   (SYSTEM_PROMPT final con reglas de grounding, TODO 5)
+Asistente del Curso de IA + RAG  (ollama · qwen3:8b)
+Índice: 24 fragmentos · top_k=4 · min_score=0.35
+Comandos: /reiniciar  /salir
+
+Tú: ¿Cuántos créditos tiene el curso?
+
+--- Fragmentos recuperados ---
+[1] score=0.537  evaluacion.md#0: # Evaluación del curso de Inteligencia Artificial ## Distribución de l...
+[2] score=0.450  programa.md#1: termina con una unidad aplicada sobre cómo construir sistemas de softw...
+[3] score=0.439  evaluacion.md#3: por semana; cada uno se entrega en la tarea de Teams correspondiente a...
+[4] score=0.438  programa.md#2: los martes y jueves de 6:00 p. m. a 8:00 p. m. en el salón B-204. El h...
+--- Mensajes enviados al LLM ---
+[system] (1516 caracteres) Eres el Asistente Inteligente del Curso de Inteligencia Artificial de Ingeniería
+[user] (1990 caracteres) Fragmentos recuperados de los documentos del curso:  [1] (evaluacion.md) # Evalu
+--------------------------------
+
+Asistente: No encontré esa información en los documentos del curso.
+
+Fuentes: evaluacion.md, programa.md
+
+[finish_reason=stop · tokens entrada=999 salida=12]
+
+Tú: ¿Cuál es el correo de la profesora?
+
+--- Fragmentos recuperados ---
+[1] score=0.552  programa.md#1: termina con una unidad aplicada sobre cómo construir sistemas de softw...
+[2] score=0.408  politicas.md#4: de la nota del laboratorio, y el estudiante debe revocar la clave de i...
+[3] score=0.346  evaluacion.md#0: # Evaluación del curso de Inteligencia Artificial ## Distribución de l...
+[4] score=0.336  politicas.md#2: permite usar asistentes de IA generativa (chatbots y asistentes de pro...
+--- Mensajes enviados al LLM ---
+[system] (1516 caracteres) Eres el Asistente Inteligente del Curso de Inteligencia Artificial de Ingeniería
+[user] (33 caracteres) ¿Cuántos créditos tiene el curso?
+[assistant] (56 caracteres) No encontré esa información en los documentos del curso.
+[user] (1995 caracteres) Fragmentos recuperados de los documentos del curso:  [1] (programa.md) termina c
+--------------------------------
+
+Asistente: La profesora del curso es la profesora Laura Méndez, pero no se menciona su correo en los documentos [1]. Para contactarla, se recomienda usar el canal oficial de Microsoft Teams del curso.
+
+Fuentes: evaluacion.md, politicas.md, programa.md
+
+[finish_reason=stop · tokens entrada=999 salida=46]
+
+Tú: ¿Qué es el mecanismo de atención?
+
+--- Fragmentos recuperados ---
+[1] score=0.347  politicas.md#2: permite usar asistentes de IA generativa (chatbots y asistentes de pro...
+[2] score=0.341  programa.md#3: artificial: agentes, búsqueda y representación del conocimiento (seman...
+[3] score=0.273  politicas.md#1: a la docente antes de la fecha límite. ## Trabajo individual y en pare...
+[4] score=0.234  programa.md#4: sistemas orquestados con LLM: uso de LLM mediante API, RAG, herramient...
+--- Mensajes enviados al LLM ---
+[system] (1516 caracteres) Eres el Asistente Inteligente del Curso de Inteligencia Artificial de Ingeniería
+[user] (33 caracteres) ¿Cuántos créditos tiene el curso?
+[assistant] (56 caracteres) No encontré esa información en los documentos del curso.
+[user] (35 caracteres) ¿Cuál es el correo de la profesora?
+[assistant] (189 caracteres) La profesora del curso es la profesora Laura Méndez, pero no se menciona su corr
+[user] (2154 caracteres) Fragmentos recuperados de los documentos del curso:  [1] (politicas.md) permite 
+--------------------------------
+
+Asistente: El mecanismo de atención es una técnica clave en el procesamiento de lenguaje natural (NLP) que permite a los modelos de lenguaje, como los Transformers, enfocarse en partes específicas de la entrada cuando procesan información. Este mecanismo se basa en la asignación de pesos a diferentes palabras o fragmentos de texto, facilitando la captación de dependencias y relaciones semánticas [2].
+
+Fuentes: politicas.md, programa.md
+
+[finish_reason=stop · tokens entrada=1099 salida=91]
+
+

@@ -1,0 +1,16 @@
+> uv run python labs/02-rag/search.py --keyword "¿Qué pasa si entrego tarde un laboratorio?"
+
+Búsqueda por palabras clave (fracción de palabras de la pregunta presentes) · top 4 de 24 fragmentos
+
+1. score=0.250  [anuncios.md#0]
+   # Anuncios del curso de Inteligencia Artificial ## Anuncio del 28 de septiembre de 2026: cambio de fecha del primer parcial Por la jornada institucional de inve...
+
+2. score=0.250  [anuncios.md#1]
+   no cambian. ## Anuncio del 21 de septiembre de 2026: publicación del laboratorio 2 Ya está publicado el laboratorio 2, sobre RAG (generación aumentada por recup...
+
+3. score=0.250  [anuncios.md#2]
+   5 Comienza la unidad 5, De Transformer a sistemas orquestados con LLM. Durante cuatro semanas construiremos el Asistente Inteligente del Curso de IA. Cada seman...
+
+4. score=0.250  [evaluacion.md#2]
+   jueves 26 de noviembre de 2026 a las 6:00 p. m., también en el salón B-204. El segundo parcial evalúa las unidades 4 y 5: procesamiento de lenguaje natural, Tra...
+

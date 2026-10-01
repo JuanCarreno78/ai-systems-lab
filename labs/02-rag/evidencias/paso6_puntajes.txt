@@ -1,0 +1,21 @@
+﻿tipo          mejor score  fragmento          pregunta
+relevante           0.713  evaluacion.md#3    ¿Cuántos estudiantes hay por grupo en el proyecto final?
+relevante           0.697  programa.md#2      ¿Cuál es el horario de asesoría?
+relevante           0.607  politicas.md#4     ¿Cuál es la nota mínima para aprobar?
+relevante           0.604  evaluacion.md#1    ¿Cuándo es el primer parcial?
+relevante           0.588  faq-labs.md#2      ¿Qué significa el error 429?
+relevante           0.537  evaluacion.md#0    ¿Cuántos créditos tiene el curso?
+relevante           0.527  evaluacion.md#2    ¿Dónde se entregan los laboratorios?
+relevante           0.522  politicas.md#2     ¿Puedo usar ChatGPT en los laboratorios?
+relevante           0.490  evaluacion.md#2    ¿Qué pasa si entrego tarde un laboratorio?
+relevante           0.139  programa.md#2      ¿Cómo pido un supletorio?
+no relevante        0.347  politicas.md#2     ¿Qué es el mecanismo de atención?
+no relevante        0.278  evaluacion.md#2    ¿Quién ganó el mundial de fútbol de 2022?
+no relevante        0.237  programa.md#1      Hola, ¿cómo estás?
+no relevante        0.190  evaluacion.md#3    ¿Qué clima hace hoy en Bogotá?
+no relevante        0.139  evaluacion.md#1    Dame una receta de arepas
+no relevante        0.121  anuncios.md#2      ¿Cómo se cambia una llanta de carro?
+no relevante        0.114  evaluacion.md#1    Recomiéndame una película de terror
+no relevante        0.031  evaluacion.md#2    ¿Cuál es la capital de Francia?
+
+Mínimo de las relevantes: 0.139   Máximo de las no relevantes: 0.347

@@ -1,0 +1,12 @@
+﻿> uv run python labs/02-rag/eval_retrieval.py 80:20 30:5 400:50
+10 preguntas · modelo sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+
+ chunk:solapamiento  chunks   hit@1   hit@2   hit@4
+              80:20      25     60%     90%    100%
+               30:5      60     60%     90%    100%
+             400:50       5     40%     70%     80%
+
+Preguntas falladas en el top 4:
+  80:20 -> ninguna
+  30:5 -> ninguna
+  400:50 -> ¿Puedo usar ChatGPT en los laboratorios?, ¿Cómo pido un supletorio?

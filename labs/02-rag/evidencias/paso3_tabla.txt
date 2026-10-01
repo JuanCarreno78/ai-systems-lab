@@ -1,0 +1,11 @@
+﻿pregunta                                      estrategia  pos fragmento correcto  score  mejor resultado
+¿Qué pasa si entrego tarde un laboratorio?    semantica     2 politicas.md#0      0.456  evaluacion.md#2 (0.490)
+¿Qué pasa si entrego tarde un laboratorio?    keyword      17 politicas.md#0      0.000  anuncios.md#0 (0.250)
+¿Cuándo es el primer parcial?                 semantica     1 evaluacion.md#1     0.604  evaluacion.md#1 (0.604)
+¿Cuándo es el primer parcial?                 keyword       2 evaluacion.md#0     0.667  anuncios.md#0 (0.667)
+¿Cuándo es el primer parcial?                 semantica     2 anuncios.md#0       0.579  evaluacion.md#1 (0.604)
+¿Cuándo es el primer parcial?                 keyword       1 anuncios.md#0       0.667  anuncios.md#0 (0.667)
+¿Puedo usar ChatGPT en los laboratorios?      semantica     1 politicas.md#2      0.522  politicas.md#2 (0.522)
+¿Puedo usar ChatGPT en los laboratorios?      keyword       3 politicas.md#1      0.750  faq-labs.md#2 (0.750)
+¿Qué significa el error 429?                  semantica     1 faq-labs.md#2       0.588  faq-labs.md#2 (0.588)
+¿Qué significa el error 429?                  keyword       2 faq-labs.md#2       1.000  faq-labs.md#1 (1.000)

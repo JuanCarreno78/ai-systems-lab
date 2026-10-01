@@ -1,0 +1,24 @@
+﻿> uv run python labs/02-rag/chatbot.py --debug   (prueba 5)
+Asistente del Curso de IA + RAG  (ollama · qwen3:8b)
+Índice: 24 fragmentos · top_k=4 · min_score=0.4
+Comandos: /reiniciar  /salir
+
+Tú: ¿Cuál es la nota mínima para aprobar?
+
+--- Fragmentos recuperados ---
+[1] score=0.607  politicas.md#4: de la nota del laboratorio, y el estudiante debe revocar la clave de i...
+[2] score=0.514  evaluacion.md#4: En la sustentación cualquier integrante del grupo debe poder explicar ...
+[3] score=0.513  politicas.md#5: se entrega en un máximo de cinco días hábiles. ## Asistencia La asiste...
+[4] score=0.503  evaluacion.md#0: # Evaluación del curso de Inteligencia Artificial ## Distribución de l...
+--- Mensajes enviados al LLM ---
+[system] (1516 caracteres) Eres el Asistente Inteligente del Curso de Inteligencia Artificial de Ingeniería
+[user] (1684 caracteres) Fragmentos recuperados de los documentos del curso:  [1] (politicas.md) de la no
+--------------------------------
+
+Asistente: La nota mínima para aprobar el curso es 3.0 [4].
+
+Fuentes: evaluacion.md, politicas.md
+
+[finish_reason=stop · tokens entrada=871 salida=18]
+
+
