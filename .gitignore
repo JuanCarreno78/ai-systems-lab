@@ -11,6 +11,11 @@ __pycache__/
 # Índices generados por ingest.py (Lab 02)
 index/
 
+# Examen final: modelos de rostro, datos biométricos y auditoría
+modelos/
+rostros/
+auditoria*.jsonl
+
 # Sistema operativo
 .DS_Store
 Thumbs.db
