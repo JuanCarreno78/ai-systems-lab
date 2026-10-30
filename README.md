@@ -10,6 +10,9 @@ Cada laboratorio construye una versión nueva del Asistente Inteligente del Curs
 |---|---|---|
 | 01 | [`labs/01-llm`](labs/01-llm/README.md) | Le manda la pregunta directo al modelo de lenguaje (LLM) |
 | 02 | [`labs/02-rag`](labs/02-rag/README.md) | Primero busca en los documentos del curso y le manda al modelo lo que encontró (RAG) |
+| 03 | `labs/03-mcp` | Código base del profesor (asistente con tools y servidor MCP) |
+| 04 | `labs/04-agent-orchestration` | Orquestador que decide entre responder, buscar en documentos o usar tools y MCP |
+| Examen | [`labs/05-examen-final`](labs/05-examen-final/README.md) | El asistente del Lab 04 en Telegram, con acceso por rostro, prueba de vida y control por rol |
 
 Cada carpeta tiene su README con lo que se hizo, y su carpeta de evidencias con las salidas de las pruebas.
 El informe del Lab 01 también está en [INFORME.md](INFORME.md). Los commits que dicen "Código base" son el

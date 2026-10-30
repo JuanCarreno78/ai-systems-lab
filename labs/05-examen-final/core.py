@@ -5,6 +5,7 @@ Cada pregunta pasa por la sesión del telegram_user_id: si venció, vuelve a "pu
 responder, y lo que el rol no permite se registra como acceso denegado.
 """
 
+import math
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -81,7 +82,7 @@ class Nucleo:
         segundos = self.sesiones.segundos_bloqueado(telegram_user_id)
         if segundos:
             audit.registrar("login_rechazado", telegram_user_id, motivo="cuenta_bloqueada")
-            return f"Tu cuenta está bloqueada temporalmente por intentos fallidos. Intenta en {segundos // 60 + 1} minuto(s)."
+            return f"Tu cuenta está bloqueada temporalmente por intentos fallidos. Intenta en {math.ceil(segundos / 60)} minuto(s)."
         reto = self.sesiones.emitir_reto(telegram_user_id)
         audit.registrar("reto_emitido", telegram_user_id, reto=reto.tipo)
         return (

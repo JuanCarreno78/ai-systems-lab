@@ -72,7 +72,7 @@ class SessionManager:
         if hasta is None or datetime.now() >= hasta:
             self._bloqueado_hasta.pop(telegram_user_id, None)
             return 0
-        return int((hasta - datetime.now()).total_seconds()) + 1
+        return max(1, int((hasta - datetime.now()).total_seconds()))
 
     def registrar_fallo(self, telegram_user_id: int) -> bool:
         """Suma un intento fallido. Devuelve True si con este fallo la cuenta quedó bloqueada."""
