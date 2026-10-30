@@ -1,0 +1,32 @@
+﻿> uv run python labs/04-agent-orchestration/evaluate.py --modo agente   (Ollama qwen3:8b, LLM_REASONING_EFFORT=low, LLM_MAX_TOKENS=2048)
+
+=== Modo agente ===
+
+ #  ruta / tools                                     ok  llam. tok. ent. tok. sal.
+ 1  (sin tools)                                      —       1      1237       162
+    P: hola
+    R: ¡Hola! ¿En qué puedo ayudarte hoy? Estoy aquí para responder preguntas sobre el curso de Inteligencia Artifici
+ 2  (sin tools)                                      —       1      1245       335
+    P: ¿Qué es el mecanismo de atención?
+    R: El mecanismo de atención es una técnica que permite a las redes neuronales identificar y enfocarse en las part
+ 3  buscar_documentos                                sí      2      2980       519
+    P: ¿Cuál es la nota mínima para aprobar el curso?
+    R: La nota mínima para aprobar el curso es **3.0 (sobre 5.0)**, según la distribución de la nota y las políticas 
+ 4  (sin tools)                                      NO      1      1246       240
+    P: ¿Qué pasa si entrego tarde un laboratorio?
+    R: Para conocer las consecuencias de entregar un laboratorio con retraso, consulta la política oficial del curso:
+ 5  buscar_documentos                                sí      2      3151       322
+    P: ¿Cuándo es el primer parcial?
+    R: El primer parcial se realizará el **martes 20 de octubre de 2026 a las 6:00 p. m.** en el salón B-204, según e
+ 6  consultar_notas                                  sí      2      2640       408
+    P: ¿Cuáles son mis notas? Mi código es 2026001
+    R: Tu código es 2026001 (Ana Torres). Las notas registradas son:   - **Laboratorios**: [4.5, 4.0] (promedio 4.25)
+ 7  consultar_notas                                  sí      2      2686      1115
+    P: Mi código es 2026001. Si saco 4.0 en los dos parciales y 4.0 en el proyecto, ¿con cuánto quedo?
+    R: Si obtienes 4.0 en ambos parciales (20% cada uno), 4.25 en los laboratorios (35%) y 4.0 en el proyecto (25%), 
+ 8  buscar_documentos                                NO      2      3159       892
+    P: ¿Cuántos días faltan para el primer parcial?
+    R: El primer parcial se realizará el martes 20 de octubre de 2026. Para calcular los días restantes, necesito con
+
+Respuestas con el dato esperado: 4/6
+Llamadas al LLM: 13 · tokens entrada=18344 salida=3993 · tiempo=386 s

@@ -94,6 +94,9 @@ class LLMClient:
             extra["tools"] = [{"type": "function", "function": tool} for tool in tools]
             # "auto": el modelo decide si pide tools; "none": debe responder con texto.
             extra["tool_choice"] = "auto" if allow_tools else "none"
+        # Modelos de razonamiento (qwen3): evita que el razonamiento gaste los max_tokens.
+        if self.settings.reasoning_effort:
+            extra["reasoning_effort"] = self.settings.reasoning_effort
         try:
             completion = self._client.chat.completions.create(
                 model=self.settings.model,
@@ -104,6 +107,11 @@ class LLMClient:
             )
         except openai.APIError as exc:
             raise LLMError(f"Error del proveedor {self.settings.provider}: {exc}") from exc
+
+        # Respuesta sin choices (pasa con OpenRouter): se trata como error.
+        if not completion.choices:
+            detail = getattr(completion, "error", None) or "respuesta sin 'choices'"
+            raise LLMError(f"El proveedor no devolvió una respuesta: {detail}")
 
         choice = completion.choices[0]
         usage = completion.usage

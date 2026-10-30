@@ -18,16 +18,31 @@ from tools import Tool
 
 
 def rag_tool(rag: CourseRAG) -> Tool:
-    # TODO 1: convierte la recuperación del Lab 02 en una Tool (mira los campos de Tool en tools.py).
-    #   - name: "buscar_documentos"; origin: "rag"; read_only: True (buscar no modifica nada).
-    #   - description: qué documentos contiene (programa, docente, horarios, evaluación, fechas de
-    #     parciales, políticas, anuncios, preguntas frecuentes) y que devuelve fragmentos numerados.
-    #     Recuerda: el modelo decide cuándo usarla leyendo SOLO esto.
-    #   - parameters: un objeto con una propiedad "consulta" de tipo string (obligatoria), cuya
-    #     descripción pida una pregunta autocontenida, p. ej. "fecha del primer parcial".
-    #   - run: una función async que reciba los argumentos, recupere con rag.retrieve(consulta) y
-    #     devuelva format_context(resultados). Solo recupera: NO llames a rag.answer (¿por qué?).
-    raise NotImplementedError("Completa rag_tool")
+    # TODO 1: la recuperación del Lab 02 como tool. Solo recupera: la respuesta la redacta el agente.
+    async def run(arguments: dict[str, Any]) -> str:
+        return format_context(rag.retrieve(arguments["consulta"]))
+
+    return Tool(
+        name="buscar_documentos",
+        description="Busca en los documentos oficiales del curso: programa, docente, horarios, "
+        "evaluación y distribución de la nota, fechas de parciales, políticas (entregas tarde, uso de "
+        "IA, trabajo en parejas), anuncios y preguntas frecuentes de los laboratorios. Devuelve "
+        "fragmentos numerados con su documento de origen para citarlos como [n].",
+        parameters={
+            "type": "object",
+            "properties": {
+                "consulta": {
+                    "type": "string",
+                    "description": "Pregunta autocontenida, sin depender del historial, "
+                    "p. ej. 'fecha del primer parcial'",
+                }
+            },
+            "required": ["consulta"],
+        },
+        run=run,
+        read_only=True,
+        origin="rag",
+    )
 
 
 async def _demo(question: str) -> None:
