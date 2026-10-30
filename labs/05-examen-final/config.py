@@ -6,6 +6,9 @@ variables de entorno directamente.
 
 Novedad del Lab 02: RAGSettings. Indexar y buscar no usan el LLM, por eso
 tienen su propia configuración y no exigen LLM_API_KEY.
+
+Examen final: SecuritySettings (token del bot, umbral de rostro, sesiones, intentos y prueba de
+vida) y las rutas de los datos del examen. El token del bot solo lo exige bot.py.
 """
 
 import os
@@ -26,9 +29,16 @@ PROVIDER_BASE_URLS = {
 }
 
 LAB_DIR = Path(__file__).resolve().parent
-# La solución docente usa los mismos documentos que el lab del estudiante.
-DATA_DIR = LAB_DIR.parent.parent / "labs" / "02-rag" / "data"
+DATA_DIR = LAB_DIR / "data"  # publico/ y restringido/ (estudiante y docente)
 INDEX_DIR = LAB_DIR / "index"  # generado por ingest.py; no se versiona
+USUARIOS_FILE = DATA_DIR / "usuarios.json"
+ACADEMICO_FILE = DATA_DIR / "academico.json"
+ATAQUES_FILE = DATA_DIR / "ataques.json"
+MODELOS_DIR = LAB_DIR / "modelos"  # modelos ONNX de rostro; no se versionan
+ROSTROS_DIR = LAB_DIR / "rostros"  # embeddings de los usuarios enrolados; no se versionan
+AUDITORIA_FILE = LAB_DIR / "auditoria.jsonl"  # no se versiona
+DETECTOR_MODEL = MODELOS_DIR / "face_detection_yunet_2023mar.onnx"
+RECOGNIZER_MODEL = MODELOS_DIR / "face_recognition_sface_2021dec.onnx"
 
 
 @dataclass(frozen=True)
@@ -51,6 +61,15 @@ class RAGSettings:
     chunk_overlap: int  # palabras compartidas por fragmentos consecutivos
     top_k: int  # cuántos fragmentos recuperar por pregunta
     min_score: float  # similitud mínima para considerar relevante un fragmento
+
+
+@dataclass(frozen=True)
+class SecuritySettings:
+    face_match_threshold: float  # similitud coseno mínima entre el rostro y el usuario enrolado
+    session_minutes: int  # validez de una sesión autenticada
+    login_max_attempts: int  # intentos fallidos seguidos antes del bloqueo
+    login_lock_minutes: int  # duración del bloqueo temporal
+    liveness_timeout_seconds: int  # tiempo para enviar la video-nota del reto
 
 
 def load_settings() -> Settings:
@@ -100,3 +119,22 @@ def load_rag_settings() -> RAGSettings:
         top_k=int(os.getenv("RAG_TOP_K", "4")),
         min_score=float(os.getenv("RAG_MIN_SCORE", "0.35")),
     )
+
+
+def load_security_settings() -> SecuritySettings:
+    load_dotenv(find_dotenv(usecwd=True))
+    return SecuritySettings(
+        face_match_threshold=float(os.getenv("FACE_MATCH_THRESHOLD", "0.363")),
+        session_minutes=int(os.getenv("SESSION_MINUTES", "10")),
+        login_max_attempts=int(os.getenv("LOGIN_MAX_ATTEMPTS", "3")),
+        login_lock_minutes=int(os.getenv("LOGIN_LOCK_MINUTES", "5")),
+        liveness_timeout_seconds=int(os.getenv("LIVENESS_TIMEOUT_SECONDS", "60")),
+    )
+
+
+def load_telegram_token() -> str:
+    load_dotenv(find_dotenv(usecwd=True))
+    token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
+    if not token:
+        raise ValueError("Falta TELEGRAM_BOT_TOKEN en el .env (se crea con @BotFather).")
+    return token

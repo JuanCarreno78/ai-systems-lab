@@ -11,7 +11,7 @@ agente las trata igual.
 Novedad del Lab 04: dias_hasta. Agregar una capacidad = agregar una tool.
 
 Uso (sin LLM ni API key):
-    uv run python labs/04-agent-orchestration/tools.py
+    uv run python labs/05-examen-final/tools.py
 """
 
 import asyncio

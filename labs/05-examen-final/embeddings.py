@@ -8,7 +8,7 @@ del equipo. La primera ejecución descarga el modelo (~220 MB) y lo guarda en ca
 Es un modelo distinto del LLM: el LLM genera texto; este solo lo convierte en vectores.
 
 Uso (prueba de humo):
-    uv run python labs/04-agent-orchestration/embeddings.py
+    uv run python labs/05-examen-final/embeddings.py
 """
 
 import numpy as np

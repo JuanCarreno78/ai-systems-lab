@@ -3,7 +3,7 @@
 Requiere el índice creado por ingest.py. Al iniciar lanza el servidor MCP (mcp_server.py).
 
 Uso:
-    uv run python labs/04-agent-orchestration/chatbot.py [--modo agente|router] [--debug]
+    uv run python labs/05-examen-final/chatbot.py [--modo agente|router] [--debug]
 
     --modo    agente (por defecto): el modelo decide en un ciclo qué capacidades usar
               router: una clasificación elige una sola ruta (directa, documentos o acciones)

@@ -5,7 +5,7 @@ Después, el orquestador (código normal) ejecuta el camino elegido. Es la salid
 estructurada del Lab 01 (JSON + validación con pydantic) usada para tomar una decisión.
 
 Uso (una llamada al LLM, sin documentos ni MCP):
-    uv run python labs/04-agent-orchestration/router.py "¿Cuándo es el primer parcial?"
+    uv run python labs/05-examen-final/router.py "¿Cuándo es el primer parcial?"
 """
 
 import sys

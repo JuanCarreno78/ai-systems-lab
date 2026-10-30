@@ -47,12 +47,17 @@ class VectorStore:
         self._vectors = vectors if self._vectors is None else np.vstack([self._vectors, vectors])
         self.chunks.extend(chunks)
 
-    def search(self, query_vector: np.ndarray, k: int) -> list[SearchResult]:
-        """Devuelve los k fragmentos más parecidos a la consulta, del más al menos parecido."""
+    def search(self, query_vector: np.ndarray, k: int, niveles: set[str] | None = None) -> list[SearchResult]:
+        """Devuelve los k fragmentos más parecidos a la consulta, del más al menos parecido.
+
+        Con `niveles`, solo compiten los fragmentos de esos niveles: el filtro va antes del top-k,
+        así un fragmento no permitido nunca sale de aquí.
+        """
         if self._vectors is None:
             return []
         scores = self._vectors @ normalize(query_vector)
-        top = np.argsort(scores)[::-1][:k]
+        permitidos = [i for i, chunk in enumerate(self.chunks) if niveles is None or chunk.nivel in niveles]
+        top = sorted(permitidos, key=lambda i: scores[i], reverse=True)[:k]
         return [SearchResult(chunk=self.chunks[i], score=float(scores[i])) for i in top]
 
     def save(self, index_dir: Path) -> None:
@@ -72,6 +77,9 @@ class VectorStore:
             )
         data = json.loads(chunks_path.read_text(encoding="utf-8"))
         store = cls(data["embedding_model"])
-        store.chunks = [Chunk(**c) for c in data["chunks"]]
+        try:
+            store.chunks = [Chunk(**c) for c in data["chunks"]]
+        except TypeError as exc:  # índice creado antes de agregar los niveles de acceso
+            raise FileNotFoundError(f"El índice en {index_dir} no tiene niveles. Ejecuta de nuevo ingest.py.") from exc
         store._vectors = np.load(index_dir / VECTORS_FILE)
         return store

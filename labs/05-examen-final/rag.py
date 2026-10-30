@@ -6,6 +6,10 @@ Pipeline de consulta (online), en cada pregunta:
 CourseRAG no sabe nada de la consola: recibe una pregunta (y el historial) y devuelve
 la respuesta junto con sus fuentes. Por eso otro programa puede reutilizarlo como una
 capacidad más.
+
+Examen final: la búsqueda recibe los niveles que permite el rol y filtra antes de armar el
+contexto. También avisa si la mejor respuesta estaba en un nivel que el rol no puede ver, para
+pedir login sin mostrar el contenido.
 """
 
 from dataclasses import dataclass
@@ -19,11 +23,18 @@ NO_CONTEXT = "(No se encontraron fragmentos relevantes en los documentos del cur
 
 
 @dataclass
+class Retrieval:
+    results: list[SearchResult]  # fragmentos permitidos que superan el umbral
+    bloqueado: str | None  # nivel de un fragmento no permitido que habría entrado al top-k sin el filtro
+
+
+@dataclass
 class RAGAnswer:
     text: str
     sources: list[SearchResult]  # fragmentos recuperados y enviados al LLM
     messages: list[Message]  # lo que realmente recibió el LLM
-    response: LLMResponse
+    response: LLMResponse | None  # None si no se llamó al LLM
+    bloqueado: str | None = None
 
 
 def format_context(results: list[SearchResult]) -> str:
@@ -50,13 +61,23 @@ class CourseRAG:
         self.top_k = top_k
         self.min_score = min_score
 
-    def retrieve(self, question: str) -> list[SearchResult]:
+    def retrieve(self, question: str, niveles: set[str]) -> Retrieval:
         query_vector = self.embedder.embed_query(question)
-        results = self.store.search(query_vector, self.top_k)
-        return [result for result in results if result.score >= self.min_score]
+        results = [r for r in self.store.search(query_vector, self.top_k, niveles) if r.score >= self.min_score]
+        # ¿Sin el filtro habría llegado algún fragmento no permitido? Solo se usa su nivel, nunca su texto.
+        sin_filtro = self.store.search(query_vector, self.top_k)
+        bloqueado = next(
+            (r.chunk.nivel for r in sin_filtro if r.chunk.nivel not in niveles and r.score >= self.min_score), None
+        )
+        return Retrieval(results, bloqueado)
 
-    def answer(self, question: str, history: list[Message] | None = None) -> RAGAnswer:
-        sources = self.retrieve(question)
-        messages = build_rag_messages(history or [], question, format_context(sources))
+    def answer(
+        self, question: str, history: list[Message], niveles: set[str], usuario: str | None = None
+    ) -> RAGAnswer:
+        retrieval = self.retrieve(question, niveles)
+        if not retrieval.results and retrieval.bloqueado:
+            # Solo hay respuesta en documentos que el rol no puede ver: no se llama al LLM.
+            return RAGAnswer("", [], [], None, retrieval.bloqueado)
+        messages = build_rag_messages(history, question, format_context(retrieval.results), usuario)
         response = self.llm.chat(messages)
-        return RAGAnswer(text=response.text, sources=sources, messages=messages, response=response)
+        return RAGAnswer(response.text, retrieval.results, messages, response, retrieval.bloqueado)

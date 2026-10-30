@@ -5,7 +5,7 @@ dato esperado, cuántas llamadas al LLM hizo y cuántos tokens consumió. Las ac
 con efectos se rechazan automáticamente: una evaluación no debe modificar nada.
 
 Uso (consume tokens: con planes gratuitos usa --pausa para no superar el límite por minuto):
-    uv run python labs/04-agent-orchestration/evaluate.py [--modo agente|router] [--pausa SEGUNDOS]
+    uv run python labs/05-examen-final/evaluate.py [--modo agente|router] [--pausa SEGUNDOS]
 """
 
 import asyncio

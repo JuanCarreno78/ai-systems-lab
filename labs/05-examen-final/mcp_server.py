@@ -1,18 +1,21 @@
 """Servidor MCP "Servicios académicos" (ficticio).
 
 Expone, con el protocolo estándar MCP, datos y acciones del sistema académico:
-  - tools (el MODELO decide pedirlas): consultar_notas, consultar_solicitudes, solicitar_supletorio
+  - tools (el MODELO decide pedirlas)
   - resources (la APLICACIÓN decide leerlos): academico://calendario
 
 Es un programa independiente del asistente: no conoce al LLM, ni al proveedor, ni el
 prompt. Cualquier cliente MCP (este asistente, un IDE, n8n, otro agente) puede usarlo.
 
-El SDK genera el JSON Schema de cada tool a partir de los tipos y las descripciones
-de la función (compáralo con las definiciones escritas a mano en tools.py).
+Examen final: tools por rol. El servidor no sabe quién pregunta; el asistente decide qué tools
+ve cada rol (access.py) y, en las tools "mis_...", pone el código desde la sesión. Por eso esas
+tools sí reciben `codigo` aquí, pero el modelo nunca ve ese parámetro.
+  - estudiante: consultar_mis_notas, consultar_mis_solicitudes, solicitar_supletorio
+  - docente:    consultar_notas (con observaciones_docente), consultar_solicitudes, registrar_nota
 
 Normalmente no se ejecuta a mano: mcp_client.py lo lanza como subproceso y le habla
 por stdin/stdout (transporte stdio). Para exponerlo por HTTP (Streamable HTTP):
-    uv run python labs/04-agent-orchestration/mcp_server.py --http
+    uv run python labs/05-examen-final/mcp_server.py --http
 """
 
 import json
@@ -29,10 +32,11 @@ DATA_FILE = Path(__file__).resolve().parent / "data" / "academico.json"
 DATA = json.loads(DATA_FILE.read_text(encoding="utf-8"))
 ESTUDIANTES: dict[str, Any] = DATA["estudiantes"]
 
-# Solicitudes creadas en esta ejecución (en memoria: se pierden al cerrar el servidor).
+# Solicitudes y notas nuevas de esta ejecución (en memoria: se pierden al cerrar el servidor).
 SOLICITUDES: list[dict[str, Any]] = []
 
 CodigoEstudiante = Annotated[str, Field(description="Código del estudiante, p. ej. 2026001")]
+CodigoSesion = Annotated[str, Field(description="Código del estudiante autenticado (lo pone el sistema)")]
 
 # IMPORTANTE: con el transporte stdio, stdout es el canal del protocolo. Un print() normal
 # corrompería los mensajes; para depurar usa print(..., file=sys.stderr).
@@ -51,13 +55,7 @@ def buscar_estudiante(codigo: str) -> dict[str, Any]:
     return estudiante
 
 
-@mcp.tool(annotations=ToolAnnotations(readOnlyHint=True))
-def consultar_notas(codigo: CodigoEstudiante) -> dict[str, Any]:
-    """Consulta las notas registradas de un estudiante del curso.
-
-    Una nota null significa que aún no está registrada. Incluye el promedio de los laboratorios.
-    """
-    estudiante = buscar_estudiante(codigo)
+def resumen_notas(codigo: str, estudiante: dict[str, Any]) -> dict[str, Any]:
     notas = estudiante["notas"]
     laboratorios = notas["laboratorios"]
     return {
@@ -68,23 +66,36 @@ def consultar_notas(codigo: CodigoEstudiante) -> dict[str, Any]:
     }
 
 
+# --- Rol estudiante: solo sus propios datos ---------------------------------------------------
+
+
 @mcp.tool(annotations=ToolAnnotations(readOnlyHint=True))
-def consultar_solicitudes(codigo: CodigoEstudiante) -> list[dict[str, Any]]:
-    """Lista las solicitudes de supletorio registradas por un estudiante."""
+def consultar_mis_notas(codigo: CodigoSesion) -> dict[str, Any]:
+    """Consulta las notas del estudiante autenticado.
+
+    Una nota null significa que aún no está registrada. Incluye el promedio de los laboratorios.
+    No incluye observaciones del docente.
+    """
+    return resumen_notas(codigo, buscar_estudiante(codigo))
+
+
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=True))
+def consultar_mis_solicitudes(codigo: CodigoSesion) -> list[dict[str, Any]]:
+    """Lista las solicitudes de supletorio del estudiante autenticado."""
     buscar_estudiante(codigo)
     return [solicitud for solicitud in SOLICITUDES if solicitud["codigo"] == codigo]
 
 
 @mcp.tool(annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=False))
 def solicitar_supletorio(
-    codigo: CodigoEstudiante,
+    codigo: CodigoSesion,
     parcial: Annotated[Literal[1, 2], Field(description="Número del parcial: 1 o 2")],
     causa: Annotated[
         Literal["incapacidad médica", "calamidad doméstica", "representación institucional"],
         Field(description="Causa justificada de la inasistencia"),
     ],
 ) -> dict[str, Any]:
-    """Registra una solicitud de supletorio para un parcial al que el estudiante no asistió.
+    """Registra una solicitud de supletorio del estudiante autenticado para un parcial al que no asistió.
 
     Es una ACCIÓN: crea un registro en el sistema académico.
     """
@@ -101,6 +112,45 @@ def solicitar_supletorio(
     }
     SOLICITUDES.append(solicitud)
     return solicitud
+
+
+# --- Rol docente: cualquier estudiante --------------------------------------------------------
+
+
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=True))
+def consultar_notas(codigo: CodigoEstudiante) -> dict[str, Any]:
+    """Consulta las notas de cualquier estudiante del curso, con las observaciones del docente.
+
+    Una nota null significa que aún no está registrada. Incluye el promedio de los laboratorios.
+    """
+    estudiante = buscar_estudiante(codigo)
+    return {**resumen_notas(codigo, estudiante), "observaciones_docente": estudiante["observaciones_docente"]}
+
+
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=True))
+def consultar_solicitudes(codigo: CodigoEstudiante) -> list[dict[str, Any]]:
+    """Lista las solicitudes de supletorio registradas por un estudiante."""
+    buscar_estudiante(codigo)
+    return [solicitud for solicitud in SOLICITUDES if solicitud["codigo"] == codigo]
+
+
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=True))
+def registrar_nota(
+    codigo: CodigoEstudiante,
+    evaluacion: Annotated[
+        Literal["parcial_1", "parcial_2", "proyecto"], Field(description="Evaluación a la que se le pone la nota")
+    ],
+    valor: Annotated[float, Field(ge=0.0, le=5.0, description="Nota de 0.0 a 5.0")],
+) -> dict[str, Any]:
+    """Registra o cambia la nota de un estudiante en una evaluación.
+
+    Es una ACCIÓN: modifica el sistema académico.
+    """
+    estudiante = buscar_estudiante(codigo)
+    anterior = estudiante["notas"][evaluacion]
+    estudiante["notas"][evaluacion] = round(valor, 1)
+    return {"codigo": codigo, "nombre": estudiante["nombre"], "evaluacion": evaluacion,
+            "nota_anterior": anterior, "nota_nueva": estudiante["notas"][evaluacion]}
 
 
 @mcp.resource("academico://calendario", description="Fechas clave del curso (parciales y proyecto final)")

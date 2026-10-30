@@ -10,7 +10,7 @@ Es el único módulo del asistente que importa `mcp` (el servidor es otro progra
 El SDK de MCP es asíncrono: el cliente espera respuestas de otro proceso.
 
 Uso (sin LLM ni API key):
-    uv run python labs/04-agent-orchestration/mcp_client.py
+    uv run python labs/05-examen-final/mcp_client.py
 """
 
 import asyncio
@@ -76,6 +76,22 @@ async def read_resource_text(client: Client, uri: str) -> str:
     return "\n".join(content.text for content in result.contents if hasattr(content, "text"))
 
 
+def calendar_tool(client: Client) -> Tool:
+    """El resource academico://calendario como tool pública de solo lectura."""
+
+    async def run(arguments: dict[str, Any]) -> str:
+        return await read_resource_text(client, "academico://calendario")
+
+    return Tool(
+        name="ver_calendario",
+        description="Devuelve las fechas clave del curso (parciales, proyecto final y sustentaciones).",
+        parameters={"type": "object", "properties": {}, "required": []},
+        run=run,
+        read_only=True,
+        origin=client.server_info.name if client.server_info else "mcp",
+    )
+
+
 async def _demo() -> None:
     async with Client(server_parameters()) as client:
         info = client.server_info
@@ -95,10 +111,8 @@ async def _demo() -> None:
         print(await read_resource_text(client, "academico://calendario"))
 
         by_name = {tool.name: tool for tool in tools}
-        if "consultar_notas" not in by_name:
-            print("\n(consultar_notas aún no existe en el servidor: TODO 4)")
-            return
         print("\nconsultar_notas('2026001') →", await by_name["consultar_notas"].run({"codigo": "2026001"}))
+        print("consultar_mis_notas('2026001') →", await by_name["consultar_mis_notas"].run({"codigo": "2026001"}))
         try:
             await by_name["consultar_notas"].run({"codigo": "9999"})
         except ToolExecutionError as exc:

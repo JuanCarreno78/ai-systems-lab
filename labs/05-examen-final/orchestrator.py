@@ -12,18 +12,23 @@ Dos estrategias para decidir qué capacidad usar:
 
 El orquestador no sabe nada de la consola: recibe una pregunta y devuelve la respuesta
 con su traza (ruta, pasos, fuentes, llamadas al LLM).
+
+Examen final: cada respuesta se arma con la sesión. El RAG solo busca en los niveles del rol, el
+agente solo recibe las tools del rol y las vuelve a revisar al ejecutarlas, y el aviso de
+"necesitas iniciar sesión" lo escribe este código, no el LLM.
 """
 
 from contextlib import AsyncExitStack
 from dataclasses import dataclass, field
 from typing import Literal
 
+from access import Sesion, puede_usar, tools_para
 from agent import MAX_STEPS, Agent, AgentAnswer, AgentStep, ConfirmFn
 from capabilities import rag_tool
 from config import load_rag_settings, load_settings
 from embeddings import Embedder
-from llm_client import LLMClient, LLMResponse, Message
-from mcp_client import load_mcp_tools, open_client
+from llm_client import LLMClient, LLMResponse
+from mcp_client import calendar_tool, load_mcp_tools, open_client
 from prompts import build_direct_messages
 from rag import CourseRAG
 from router import RouterResult, route
@@ -31,6 +36,11 @@ from tools import LOCAL_TOOLS, Tool
 from vector_store import VectorStore
 
 Mode = Literal["router", "agente"]
+
+PIDE_LOGIN = "Esa información está en documentos restringidos del curso. Para verla debes iniciar sesión con /login."
+ROL_SIN_ACCESO = "Esa información es reservada y tu rol ({rol}) no tiene acceso a ella."
+NOTA_PIDE_LOGIN = "Nota: hay más información sobre esto en documentos restringidos. Para verla debes iniciar sesión con /login."
+NOTA_ROL_SIN_ACCESO = "Nota: hay información relacionada que es reservada, y tu rol ({rol}) no tiene acceso a ella."
 
 
 @dataclass
@@ -40,45 +50,83 @@ class OrchestratorAnswer:
     routing: RouterResult | None = None  # solo en modo router
     steps: list[AgentStep] = field(default_factory=list)  # traza del agente, si se usó
     sources: list[str] = field(default_factory=list)  # fuentes calculadas por el programa (ruta documentos)
+    niveles_enviados: list[str] = field(default_factory=list)  # niveles de los fragmentos que vio el LLM
     responses: list[LLMResponse] = field(default_factory=list)  # TODAS las llamadas al LLM, en orden
     stopped_by_limit: bool = False
+    bloqueado: str | None = None  # nivel restringido que tenía la respuesta, si el rol no lo puede ver
 
     def tools_used(self) -> list[str]:
         return [run.call.name for step in self.steps for run in step.tool_runs]
 
+    def tools_denied(self) -> list[str]:
+        return [run.call.name for step in self.steps for run in step.tool_runs if run.status == "denegada"]
+
+    def tools_ok(self) -> list[str]:
+        return [run.call.name for step in self.steps for run in step.tool_runs if run.status == "ok"]
+
+
+def aviso_restringido(sesion: Sesion) -> str:
+    return PIDE_LOGIN if not sesion.autenticada else ROL_SIN_ACCESO.format(rol=sesion.rol)
+
+
+def nota_restringida(sesion: Sesion) -> str:
+    return NOTA_PIDE_LOGIN if not sesion.autenticada else NOTA_ROL_SIN_ACCESO.format(rol=sesion.rol)
+
+
+def describir_usuario(sesion: Sesion) -> str | None:
+    """Nombre y rol para el prompt, tomados de la sesión (nunca del chat)."""
+    return f"{sesion.nombre} (rol {sesion.rol})" if sesion.autenticada else None
+
 
 class Orchestrator:
-    def __init__(
-        self,
-        llm: LLMClient,
-        rag: CourseRAG,
-        action_tools: list[Tool],
-        confirm: ConfirmFn,
-        max_steps: int = MAX_STEPS,
-    ):
+    def __init__(self, llm: LLMClient, rag: CourseRAG, tools: list[Tool], max_steps: int = MAX_STEPS):
         self.llm = llm
         self.rag = rag
-        # Modo agente: un solo agente con todas las capacidades.
-        self.agent = Agent(llm, [rag_tool(rag), *action_tools], confirm, max_steps)
-        # Modo router, ruta "acciones": un agente solo con las tools de datos y acciones.
-        self.actions_agent = Agent(llm, action_tools, confirm, max_steps)
+        self.tools = tools  # todas las tools; cada respuesta usa solo las del rol
+        self.max_steps = max_steps
 
-    async def answer(self, question: str, history: list[Message], mode: Mode) -> OrchestratorAnswer:
+    def _agent(self, sesion: Sesion, confirm: ConfirmFn, con_documentos: bool) -> Agent:
+        tools = tools_para(sesion, self.tools)
+        if con_documentos:
+            tools = [rag_tool(self.rag, sesion.niveles()), *tools]
+
+        def authorize(name: str) -> bool:
+            return (name == "buscar_documentos" and con_documentos) or puede_usar(sesion, name)
+
+        return Agent(self.llm, tools, confirm, self.max_steps, authorize, describir_usuario(sesion))
+
+    async def answer(self, question: str, sesion: Sesion, confirm: ConfirmFn, mode: Mode = "router") -> OrchestratorAnswer:
+        history = sesion.historial
+        usuario = describir_usuario(sesion)
         if mode == "agente":
-            return self._from_agent(await self.agent.run(question, history), mode)
+            agent = self._agent(sesion, confirm, con_documentos=True)
+            return self._from_agent(await agent.run(question, history), mode)
 
         routing = route(self.llm, question)
         ruta = routing.decision.ruta
-        # TODO 5: cada ruta usa la capacidad de un lab anterior; la clasificación también cuenta como llamada.
         if ruta == "directa":
-            response = self.llm.chat(build_direct_messages(history, question))
+            response = self.llm.chat(build_direct_messages(history, question, usuario))
             answer = OrchestratorAnswer(response.text, mode, responses=[response])
         elif ruta == "documentos":
-            rag_answer = self.rag.answer(question, history)
-            sources = sorted({result.chunk.source for result in rag_answer.sources})
-            answer = OrchestratorAnswer(rag_answer.text, mode, sources=sources, responses=[rag_answer.response])
+            rag_answer = self.rag.answer(question, history, sesion.niveles(), usuario)
+            if rag_answer.response is None:
+                # Solo había respuesta en documentos que el rol no puede ver: responde el software.
+                answer = OrchestratorAnswer(aviso_restringido(sesion), mode, bloqueado=rag_answer.bloqueado)
+            else:
+                texto = rag_answer.text
+                if rag_answer.bloqueado:
+                    texto += "\n\n" + nota_restringida(sesion)
+                answer = OrchestratorAnswer(
+                    texto,
+                    mode,
+                    sources=sorted({r.chunk.source for r in rag_answer.sources}),
+                    niveles_enviados=sorted({r.chunk.nivel for r in rag_answer.sources}),
+                    responses=[rag_answer.response],
+                    bloqueado=rag_answer.bloqueado,
+                )
         else:
-            answer = self._from_agent(await self.actions_agent.run(question, history), mode)
+            agent = self._agent(sesion, confirm, con_documentos=False)
+            answer = self._from_agent(await agent.run(question, history), mode)
         answer.routing = routing
         answer.responses.insert(0, routing.response)
         return answer
@@ -94,7 +142,7 @@ class Orchestrator:
         )
 
 
-async def create_orchestrator(stack: AsyncExitStack, confirm: ConfirmFn) -> Orchestrator:
+async def create_orchestrator(stack: AsyncExitStack) -> Orchestrator:
     """Arma el sistema completo: configuración, LLM, índice, RAG, tools locales y servidor MCP.
 
     Lanza ValueError (configuración), FileNotFoundError (falta el índice) o un error de
@@ -114,5 +162,5 @@ async def create_orchestrator(stack: AsyncExitStack, confirm: ConfirmFn) -> Orch
         min_score=rag_settings.min_score,
     )
     mcp_client = await open_client(stack)
-    action_tools = [*LOCAL_TOOLS, *await load_mcp_tools(mcp_client)]
-    return Orchestrator(llm, rag, action_tools, confirm)
+    tools = [*LOCAL_TOOLS, calendar_tool(mcp_client), *await load_mcp_tools(mcp_client)]
+    return Orchestrator(llm, rag, tools)

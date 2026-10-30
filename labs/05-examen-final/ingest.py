@@ -4,7 +4,7 @@ Se ejecuta una vez, y de nuevo cada vez que cambian los documentos o la configur
 de chunking o de embeddings. No usa el LLM ni necesita API key.
 
 Uso:
-    uv run python labs/04-agent-orchestration/ingest.py [--show]
+    uv run python labs/05-examen-final/ingest.py [--show]
 """
 
 import sys

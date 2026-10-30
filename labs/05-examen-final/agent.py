@@ -33,12 +33,16 @@ LIMIT_MESSAGE = (
 )
 
 REJECTED = "El usuario NO autorizó esta acción, así que no se ejecutó."
+DENIED = "Acceso denegado: el rol de esta sesión no permite esta herramienta. No se ejecutó."
+
+# Revisión del rol al ejecutar: recibe el nombre de la tool y dice si la sesión puede usarla.
+AuthorizeFn = Callable[[str], bool]
 
 
 @dataclass
 class ToolRun:
     call: ToolCall  # lo que pidió el modelo
-    status: Literal["ok", "error", "rechazada"]
+    status: Literal["ok", "error", "rechazada", "denegada"]
     result: str  # lo que recibe el modelo como resultado
 
 
@@ -57,16 +61,26 @@ class AgentAnswer:
 
 
 class Agent:
-    def __init__(self, llm: LLMClient, tools: list[Tool], confirm: ConfirmFn, max_steps: int = MAX_STEPS):
+    def __init__(
+        self,
+        llm: LLMClient,
+        tools: list[Tool],
+        confirm: ConfirmFn,
+        max_steps: int = MAX_STEPS,
+        authorize: AuthorizeFn | None = None,
+        usuario: str | None = None,
+    ):
         self.llm = llm
         self.tools = {tool.name: tool for tool in tools}
         if len(self.tools) != len(tools):
             raise ValueError("Hay dos tools con el mismo nombre.")
         self.confirm = confirm
         self.max_steps = max_steps
+        self.authorize = authorize
+        self.usuario = usuario  # nombre y rol desde la sesión, para personalizar el prompt
 
     async def run(self, question: str, history: list[Message] | None = None) -> AgentAnswer:
-        messages = build_agent_messages(history or [], question)
+        messages = build_agent_messages(history or [], question, self.usuario)
         definitions = [tool.definition() for tool in self.tools.values()]
         steps: list[AgentStep] = []
 
@@ -93,6 +107,9 @@ class Agent:
 
     async def execute(self, call: ToolCall) -> ToolRun:
         """Ejecuta una tool pedida por el modelo (igual que en el Lab 03)."""
+        # Defensa en profundidad: aunque el modelo nombre una tool que no se le mostró, el rol se revisa aquí.
+        if self.authorize is not None and not self.authorize(call.name):
+            return ToolRun(call, "denegada", DENIED)
         tool = self.tools.get(call.name)
         if tool is None:
             return ToolRun(call, "error", f"Error: no existe la tool {call.name!r}.")
