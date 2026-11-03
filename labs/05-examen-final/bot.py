@@ -48,6 +48,12 @@ def nucleo(context: ContextTypes.DEFAULT_TYPE) -> Nucleo:
     return context.application.bot_data["nucleo"]
 
 
+async def registrar_comando(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Deja en el log quién usa cada comando (sirve para saber el telegram_user_id al enrolar)."""
+    if update.message and update.message.text and update.message.text.startswith("/"):
+        log.info("comando %s user=%s", update.message.text.split()[0], update.effective_user.id)
+
+
 # --- comandos ---------------------------------------------------------------------------------
 
 
@@ -181,17 +187,29 @@ async def foto_o_video(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 # --- arranque ---------------------------------------------------------------------------------
 
 
+async def mantener_nucleo(app: Application, listo: asyncio.Event, cerrar: asyncio.Event) -> None:
+    # El servidor MCP debe abrirse y cerrarse en la misma tarea de asyncio: esta tarea lo mantiene vivo.
+    async with AsyncExitStack() as stack:
+        app.bot_data["nucleo"] = Nucleo(await create_orchestrator(stack), load_security_settings())
+        listo.set()
+        await cerrar.wait()
+
+
 async def al_iniciar(app: Application) -> None:
-    stack = AsyncExitStack()
-    await stack.__aenter__()
-    app.bot_data["stack"] = stack
-    app.bot_data["nucleo"] = Nucleo(await create_orchestrator(stack), load_security_settings())
-    app.bot_data["pendientes"] = {}
+    listo, cerrar = asyncio.Event(), asyncio.Event()
+    tarea = asyncio.create_task(mantener_nucleo(app, listo, cerrar))
+    app.bot_data.update(pendientes={}, cerrar=cerrar, tarea_nucleo=tarea)
+    espera = asyncio.create_task(listo.wait())
+    await asyncio.wait({tarea, espera}, return_when=asyncio.FIRST_COMPLETED)
+    if tarea.done():  # falló al iniciar (configuración, índice o servidor MCP)
+        espera.cancel()
+        tarea.result()
     log.info("Asistente listo: núcleo, índice y servidor MCP iniciados")
 
 
 async def al_cerrar(app: Application) -> None:
-    await app.bot_data["stack"].aclose()
+    app.bot_data["cerrar"].set()
+    await app.bot_data["tarea_nucleo"]
 
 
 async def error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -212,6 +230,7 @@ def main() -> None:
         .post_shutdown(al_cerrar)
         .build()
     )
+    app.add_handler(MessageHandler(filters.COMMAND, registrar_comando), group=-1)  # antes que los demás
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("quiensoy", quiensoy))
     app.add_handler(CommandHandler("login", login))
@@ -223,7 +242,8 @@ def main() -> None:
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, texto))
     app.add_error_handler(error)
     log.info("Iniciando el bot (long polling). Ctrl+C para detener.")
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    # bootstrap_retries=-1: si la red falla al arrancar, sigue intentando en vez de cerrarse.
+    app.run_polling(allowed_updates=Update.ALL_TYPES, bootstrap_retries=-1)
 
 
 if __name__ == "__main__":
