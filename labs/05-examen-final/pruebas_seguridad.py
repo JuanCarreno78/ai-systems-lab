@@ -14,7 +14,8 @@ import json
 from contextlib import AsyncExitStack
 from typing import Any
 
-from config import ATAQUES_FILE, load_security_settings
+import audit
+from config import ATAQUES_FILE, LAB_DIR, load_security_settings
 from core import Nucleo
 from documents import Chunk
 from orchestrator import create_orchestrator
@@ -149,6 +150,7 @@ async def ejecutar(nucleo: Nucleo, caso: dict[str, Any], codigo_1: str) -> tuple
 
 
 async def main() -> None:
+    audit.ARCHIVO = LAB_DIR / "auditoria_pruebas.jsonl"  # no se mezcla con la auditoría del bot real
     ataques = json.loads(ATAQUES_FILE.read_text(encoding="utf-8"))["casos"]
     casos = [*ataques, *CASOS_PROPIOS]
     async with AsyncExitStack() as stack:

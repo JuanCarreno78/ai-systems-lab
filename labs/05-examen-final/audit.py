@@ -11,9 +11,11 @@ from typing import Any
 
 from config import AUDITORIA_FILE
 
+ARCHIVO: Path = AUDITORIA_FILE  # pruebas_seguridad.py lo cambia para no mezclar sus pruebas con el bot real
 
-def registrar(evento: str, telegram_user_id: int | None, archivo: Path = AUDITORIA_FILE, **detalle: Any) -> None:
+
+def registrar(evento: str, telegram_user_id: int | None, **detalle: Any) -> None:
     linea = {"fecha": datetime.now().isoformat(timespec="seconds"), "telegram_user_id": telegram_user_id,
              "evento": evento, **detalle}
-    with archivo.open("a", encoding="utf-8") as fh:
+    with ARCHIVO.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(linea, ensure_ascii=False) + "\n")
