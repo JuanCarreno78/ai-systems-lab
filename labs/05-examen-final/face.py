@@ -33,13 +33,23 @@ class Rostro:
         return float(nariz[0] - (ojo_1[0] + ojo_2[0]) / 2) / distancia_ojos
 
 
+def leer_bytes(ruta: Path) -> np.ndarray:
+    # OpenCV en Windows no abre rutas con caracteres como "ñ": el archivo se lee con Python.
+    return np.fromfile(str(ruta), dtype=np.uint8)
+
+
+def leer_imagen(ruta: Path) -> np.ndarray | None:
+    return cv2.imdecode(leer_bytes(ruta), cv2.IMREAD_COLOR)
+
+
 class FaceEngine:
     def __init__(self, detector: Path = DETECTOR_MODEL, recognizer: Path = RECOGNIZER_MODEL):
         for modelo in (detector, recognizer):
             if not modelo.exists():
                 raise FileNotFoundError(f"Falta el modelo {modelo.name} en {modelo.parent}.")
-        self._detector = cv2.FaceDetectorYN.create(str(detector), "", (320, 320), score_threshold=0.8)
-        self._recognizer = cv2.FaceRecognizerSF.create(str(recognizer), "")
+        sin_config = np.array([], dtype=np.uint8)
+        self._detector = cv2.FaceDetectorYN.create("onnx", leer_bytes(detector), sin_config, (320, 320), 0.8)
+        self._recognizer = cv2.FaceRecognizerSF.create("onnx", leer_bytes(recognizer), sin_config)
 
     def detectar(self, imagen: np.ndarray) -> list[Rostro]:
         alto, ancho = imagen.shape[:2]

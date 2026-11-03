@@ -17,10 +17,9 @@ import sys
 from itertools import combinations
 from pathlib import Path
 
-import cv2
 import numpy as np
 
-from face import FaceEngine, similitud
+from face import FaceEngine, leer_imagen, similitud
 
 UMBRALES = [0.25, 0.30, 0.363, 0.40, 0.45, 0.50, 0.55, 0.60]
 
@@ -31,7 +30,7 @@ def cargar(engine: FaceEngine, carpeta: Path) -> dict[str, list[np.ndarray]]:
         for foto in sorted(sub.iterdir()):
             if foto.suffix.lower() not in {".jpg", ".jpeg", ".png"}:
                 continue
-            imagen = cv2.imread(str(foto))
+            imagen = leer_imagen(foto)
             rostros = engine.detectar(imagen) if imagen is not None else []
             if len(rostros) != 1:
                 print(f"  (se omite {sub.name}/{foto.name}: {len(rostros)} rostros)")

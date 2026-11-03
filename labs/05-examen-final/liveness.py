@@ -13,7 +13,10 @@ Uso (calibración con un video propio, sin Telegram):
     uv run python labs/05-examen-final/liveness.py <video.mp4> <reto> <id_usuario>
 """
 
+import shutil
+import tempfile
 from dataclasses import dataclass, field
+from pathlib import Path
 
 import cv2
 import numpy as np
@@ -37,6 +40,11 @@ class ResultadoVida:
 
 
 def leer_frames(ruta: str, muestras: int = MUESTRAS) -> list[np.ndarray]:
+    if not ruta.isascii():
+        # OpenCV en Windows no abre rutas con caracteres como "ñ": se lee una copia temporal.
+        with tempfile.TemporaryDirectory() as carpeta:
+            copia = shutil.copy(ruta, Path(carpeta) / "video.mp4")
+            return leer_frames(str(copia), muestras)
     video = cv2.VideoCapture(ruta)
     total = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
     frames = []

@@ -12,18 +12,17 @@ Uso:
 import sys
 from pathlib import Path
 
-import cv2
 import numpy as np
 
 from config import ROSTROS_DIR
-from face import FaceEngine, archivo_enrolamiento, similitud
+from face import FaceEngine, archivo_enrolamiento, leer_imagen, similitud
 from users import asignar_telegram, buscar_por_id
 
 
 def embeddings_de_fotos(engine: FaceEngine, fotos: list[Path]) -> np.ndarray:
     vectores = []
     for foto in fotos:
-        imagen = cv2.imread(str(foto))
+        imagen = leer_imagen(foto)
         if imagen is None:
             raise ValueError(f"No se pudo leer la imagen {foto.name}.")
         rostros = engine.detectar(imagen)
