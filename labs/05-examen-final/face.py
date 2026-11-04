@@ -15,6 +15,8 @@ import numpy as np
 
 from config import DETECTOR_MODEL, RECOGNIZER_MODEL, ROSTROS_DIR
 
+LADO_DETECCION = 640  # lado mayor de la imagen con la que se detecta
+
 
 @dataclass
 class Rostro:
@@ -52,10 +54,18 @@ class FaceEngine:
         self._recognizer = cv2.FaceRecognizerSF.create("onnx", leer_bytes(recognizer), sin_config)
 
     def detectar(self, imagen: np.ndarray) -> list[Rostro]:
+        # YuNet no encuentra rostros muy grandes (selfies de cerca): se detecta en una copia reducida
+        # y las coordenadas se devuelven al tamaño original, que es el que usa el reconocimiento.
         alto, ancho = imagen.shape[:2]
-        self._detector.setInputSize((ancho, alto))
-        _, filas = self._detector.detect(imagen)
-        return [] if filas is None else [Rostro(fila) for fila in filas]
+        escala = min(1.0, LADO_DETECCION / max(alto, ancho))
+        reducida = cv2.resize(imagen, (round(ancho * escala), round(alto * escala))) if escala < 1 else imagen
+        self._detector.setInputSize((reducida.shape[1], reducida.shape[0]))
+        _, filas = self._detector.detect(reducida)
+        if filas is None:
+            return []
+        filas = filas.copy()
+        filas[:, :14] /= escala  # caja y landmarks; la última columna es el puntaje
+        return [Rostro(fila) for fila in filas]
 
     def embedding(self, imagen: np.ndarray, rostro: Rostro) -> np.ndarray:
         alineado = self._recognizer.alignCrop(imagen, rostro.fila)

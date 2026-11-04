@@ -1,0 +1,20 @@
+﻿> uv run python labs/05-examen-final/umbral.py labs/05-examen-final/rostros/fotos_umbral   (2 integrantes + 8 personas de LFW)
+  (se omite Bulent_Ecevit/Bulent_Ecevit_0003.jpg: 2 rostros)
+  (se omite Javier_Solana/Javier_Solana_0001.jpg: 2 rostros)
+  (se omite Michael_Chang/Michael_Chang_0001.jpg: 2 rostros)
+  (se omite Pedro_Almodovar/Pedro_Almodovar_0003.jpg: 3 rostros)
+
+Personas: 10 (Bulent_Ecevit: 4 fotos, Catherine_Deneuve: 5 fotos, Geoff_Hoon: 5 fotos, integrante_1: 5 fotos, integrante_2: 5 fotos, Javier_Solana: 4 fotos, Martina_McBride: 5 fotos, Michael_Chang: 4 fotos, Pedro_Almodovar: 4 fotos, Robert_Blake: 5 fotos)
+Pares genuinos: 84   Pares impostores: 951
+Genuinos:   mínima 0.331  promedio 0.712  máxima 0.959
+Impostores: mínima -0.268  promedio 0.072  máxima 0.308
+
+ umbral     FAR     FRR  impostores aceptados / genuinos rechazados
+  0.250    1.5%    0.0%  14/951 / 0/84
+  0.300    0.1%    0.0%  1/951 / 0/84
+  0.363    0.0%    1.2%  0/951 / 1/84
+  0.400    0.0%    1.2%  0/951 / 1/84
+  0.450    0.0%    2.4%  0/951 / 2/84
+  0.500    0.0%    8.3%  0/951 / 7/84
+  0.550    0.0%   15.5%  0/951 / 13/84
+  0.600    0.0%   17.9%  0/951 / 15/84

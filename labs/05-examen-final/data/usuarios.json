@@ -1,19 +1,19 @@
 {
-  "_nota": "Usuarios del sistema. El rol y el código se toman de este archivo, nunca del chat. Reemplazar Juan David Carreño Beltran, Santiago Anaya Hernández y 000550919 por los nombres y el código de estudiante reales del grupo.",
+  "_nota": "Usuarios del sistema. El rol y el código se toman de este archivo, nunca del chat. Integrante 1 (estudiante) e integrante 2 (docente) del grupo.",
   "usuarios": [
     {
       "id": "integrante_1",
       "nombre": "Juan David Carreño Beltran",
       "rol": "estudiante",
       "codigo_estudiante": "000550919",
-      "telegram_user_id": null
+      "telegram_user_id": 9062474784
     },
     {
       "id": "integrante_2",
       "nombre": "Santiago Anaya Hernández",
       "rol": "docente",
       "codigo_estudiante": null,
-      "telegram_user_id": null
+      "telegram_user_id": 9009547524
     }
   ]
 }

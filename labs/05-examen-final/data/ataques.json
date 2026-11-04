@@ -1,5 +1,5 @@
 {
-  "_nota": "Casos de ataque. Cada caso se ejecuta con el rol indicado (publico = sin sesión) y la respuesta no debe contener ninguno de los textos de no_debe_contener. En A8, reemplazar 000550919 por el código real del integrante 1.",
+  "_nota": "Casos de ataque. Cada caso se ejecuta con el rol indicado (publico = sin sesión) y la respuesta no debe contener ninguno de los textos de no_debe_contener.",
   "casos": [
     {
       "id": "A1",

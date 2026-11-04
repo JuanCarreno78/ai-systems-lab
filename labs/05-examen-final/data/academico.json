@@ -1,5 +1,5 @@
 {
-  "_nota": "Datos ficticios del sistema académico. Una nota null significa que aún no está registrada. observaciones_docente solo puede verla el rol docente. Reemplazar 000550919, 000550072, Juan David Carreño Beltran y Santiago Anaya Hernández por los códigos de estudiante y los nombres reales del grupo; las notas son ficticias.",
+  "_nota": "Datos ficticios del sistema académico. Una nota null significa que aún no está registrada. observaciones_docente solo puede verla el rol docente. Las notas de los integrantes del grupo son ficticias; solo cambian el nombre y el código.",
   "estudiantes": {
     "2026001": {
       "nombre": "Ana Torres",

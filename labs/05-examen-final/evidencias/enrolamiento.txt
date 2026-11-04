@@ -1,0 +1,9 @@
+﻿> uv run python labs/05-examen-final/enroll.py integrante_1 9062474784 <5 fotos>
+Juan David Carreño Beltran (estudiante) enrolado con 5 fotos.
+Similitud entre sus fotos: mínima 0.811, máxima 0.959
+Embeddings guardados en C:\Users\JuanDavidCarreñoBelt\Documents\Juan David Carreño Beltran\Sexto Semestre\Fundamentos de Inteligencia Artificial\A2.3 Chatbot con LLM\ai-systems-lab\labs\05-examen-final\rostros\integrante_1.npy (sin imágenes).
+
+> uv run python labs/05-examen-final/enroll.py integrante_2 9009547524 <5 fotos>
+Santiago Anaya Hernández (docente) enrolado con 5 fotos.
+Similitud entre sus fotos: mínima 0.737, máxima 0.918
+Embeddings guardados en C:\Users\JuanDavidCarreñoBelt\Documents\Juan David Carreño Beltran\Sexto Semestre\Fundamentos de Inteligencia Artificial\A2.3 Chatbot con LLM\ai-systems-lab\labs\05-examen-final\rostros\integrante_2.npy (sin imágenes).
