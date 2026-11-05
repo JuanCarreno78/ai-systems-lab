@@ -28,11 +28,13 @@ class Rostro:
 
     @property
     def giro(self) -> float:
-        """Desplazamiento horizontal de la nariz respecto al punto medio de los ojos, dividido por la
-        distancia entre los ojos. Cerca de 0 = de frente; el signo indica hacia qué lado gira."""
+        """Desplazamiento de la nariz respecto al punto medio de los ojos, medido sobre la línea de los
+        ojos y dividido por la distancia entre ellos. Cerca de 0 = de frente; el signo indica hacia qué
+        lado gira. Como se mide sobre la línea de los ojos, inclinar la cabeza o rotar una foto no lo cambia."""
         ojo_1, ojo_2, nariz = self.fila[4:6], self.fila[6:8], self.fila[8:10]
-        distancia_ojos = max(float(np.linalg.norm(ojo_1 - ojo_2)), 1.0)
-        return float(nariz[0] - (ojo_1[0] + ojo_2[0]) / 2) / distancia_ojos
+        linea_ojos = ojo_2 - ojo_1
+        distancia_ojos = max(float(np.linalg.norm(linea_ojos)), 1.0)
+        return float(np.dot(nariz - (ojo_1 + ojo_2) / 2, linea_ojos)) / distancia_ojos**2
 
 
 def leer_bytes(ruta: Path) -> np.ndarray:

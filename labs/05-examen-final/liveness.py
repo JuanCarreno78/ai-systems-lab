@@ -25,10 +25,18 @@ from face import FaceEngine, similitud, similitud_con_enrolado
 
 MUESTRAS = 24  # frames repartidos a lo largo del video
 MIN_FRAMES_CON_ROSTRO = 0.6  # fracción mínima de frames con exactamente un rostro
-GIRO_MINIMO = 0.25  # cambio mínimo del giro (respecto al inicio) para contar un movimiento
+# Cambio mínimo del giro (respecto al inicio) para contar un movimiento. En los videos de los integrantes
+# los giros dieron entre 0.22 y 0.48, y una cara quieta se mueve menos de 0.10.
+GIRO_MINIMO = 0.20
 # En la imagen sin espejo, cuando la persona gira hacia SU izquierda la nariz se mueve hacia la derecha
 # de la imagen y el giro aumenta. Si la cámara entrega el video en espejo, se invierte con -1.
 SIGNO_IZQUIERDA = 1
+ROTACIONES = {
+    0: None,
+    90: cv2.ROTATE_90_CLOCKWISE,
+    180: cv2.ROTATE_180,
+    270: cv2.ROTATE_90_COUNTERCLOCKWISE,
+}
 
 
 @dataclass
@@ -46,6 +54,7 @@ def leer_frames(ruta: str, muestras: int = MUESTRAS) -> list[np.ndarray]:
             copia = shutil.copy(ruta, Path(carpeta) / "video.mp4")
             return leer_frames(str(copia), muestras)
     video = cv2.VideoCapture(ruta)
+    video.set(cv2.CAP_PROP_ORIENTATION_AUTO, 1)  # aplica la rotación que trae el video del celular
     total = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
     frames = []
     if total > 0:
@@ -58,10 +67,43 @@ def leer_frames(ruta: str, muestras: int = MUESTRAS) -> list[np.ndarray]:
     return frames
 
 
+def rostro_derecho(rostro) -> bool:
+    """Ojos arriba de la nariz y nariz arriba de la boca: la cara no está de lado ni al revés."""
+    f = rostro.fila
+    ojos_y, nariz_y, boca_y = (f[5] + f[7]) / 2, f[9], (f[11] + f[13]) / 2
+    return bool(ojos_y < nariz_y < boca_y)
+
+
+def orientar(frames: list[np.ndarray], engine: FaceEngine) -> tuple[list[np.ndarray], int]:
+    """Algunos celulares guardan la video-nota girada. Se prueba con 0, 90, 180 y 270 grados en
+    unos frames de muestra y se deja la rotación en la que la cara sale derecha con más confianza."""
+    muestra = frames[:: max(1, len(frames) // 6)]
+    mejor, mejor_puntaje = 0, 0.0
+    for grados, rotacion in ROTACIONES.items():
+        puntaje = 0.0
+        for frame in muestra:
+            girado = frame if rotacion is None else cv2.rotate(frame, rotacion)
+            puntaje += sum(float(r.fila[14]) for r in engine.detectar(girado) if rostro_derecho(r))
+        if puntaje > mejor_puntaje:
+            mejor, mejor_puntaje = grados, puntaje
+    rotacion = ROTACIONES[mejor]
+    if rotacion is None:
+        return frames, 0
+    return [cv2.rotate(f, rotacion) for f in frames], mejor
+
+
 def movimiento_detectado(giros: list[float], reto: str) -> bool:
-    """¿Los giros (en orden) muestran el movimiento del reto? Se mide respecto al inicio del video."""
+    """¿Los giros (en orden) muestran el movimiento del reto? Se mide respecto al inicio del video.
+    Algunos celulares guardan la video-nota en espejo y desde el video no se puede saber, por eso se
+    acepta el movimiento en los dos sentidos. Se sigue exigiendo el tipo de reto (un giro o los dos lados)."""
     base = float(np.median(giros[: max(2, len(giros) // 5)]))
-    relativos = [(g - base) * SIGNO_IZQUIERDA for g in giros]  # positivo = hacia la izquierda del usuario
+    return any(
+        _cumple_reto([(g - base) * signo for g in giros], reto) for signo in (SIGNO_IZQUIERDA, -SIGNO_IZQUIERDA)
+    )
+
+
+def _cumple_reto(relativos: list[float], reto: str) -> bool:
+    # positivo = hacia la izquierda del usuario
     izquierda = [i for i, g in enumerate(relativos) if g >= GIRO_MINIMO]
     derecha = [i for i, g in enumerate(relativos) if g <= -GIRO_MINIMO]
     if reto == "izquierda":
@@ -81,6 +123,7 @@ def verificar_video(
     frames = leer_frames(ruta)
     if not frames:
         return ResultadoVida(False, "video_ilegible")
+    frames, rotacion = orientar(frames, engine)
 
     analizados = []  # (frame, rostro) con exactamente un rostro
     for frame in frames:
@@ -89,7 +132,13 @@ def verificar_video(
             return ResultadoVida(False, "varios_rostros", detalle={"frames": len(frames)})
         if len(rostros) == 1:
             analizados.append((frame, rostros[0]))
-    detalle = {"frames": len(frames), "frames_con_rostro": len(analizados)}
+    alto, ancho = frames[0].shape[:2]
+    detalle = {
+        "frames": len(frames),
+        "frames_con_rostro": len(analizados),
+        "tamano": f"{ancho}x{alto}",
+        "rotacion": rotacion,
+    }
     if len(analizados) < MIN_FRAMES_CON_ROSTRO * len(frames):
         return ResultadoVida(False, "sin_rostro", detalle=detalle)
 
@@ -103,7 +152,7 @@ def verificar_video(
 
     # 2. El movimiento pedido.
     giros = [r.giro for _, r in analizados]
-    detalle["giro_min"], detalle["giro_max"] = round(min(giros), 3), round(max(giros), 3)
+    detalle["giros"] = [round(g, 2) for g in giros]
     if not movimiento_detectado(giros, reto):
         return ResultadoVida(False, "movimiento_no_detectado", detalle=detalle)
 

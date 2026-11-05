@@ -109,22 +109,23 @@ class Nucleo:
             motivo = "video_reenviado"
         if motivo is None and ruta_video is None:
             motivo = "video_ilegible"
-        similitud = None
+        similitud, detalle = None, {}
         if motivo is None:
             enrolados = cargar_enrolamiento(usuario.id)
             resultado = verificar_video(ruta_video, reto.tipo, self.engine, enrolados, self.settings.face_match_threshold)
             motivo, similitud = (None if resultado.ok else resultado.motivo), resultado.similitud
+            detalle = resultado.detalle  # solo conteos y medidas del video, sin imágenes ni embeddings
             if resultado.ok:
                 sesion = self.sesiones.iniciar(telegram_user_id, usuario)
                 audit.registrar("login_aceptado", telegram_user_id, usuario=usuario.id, rol=usuario.rol,
-                                reto=reto.tipo, similitud=similitud)
+                                reto=reto.tipo, similitud=similitud, detalle=detalle)
                 return ResultadoLogin(True, saludo(usuario, self.settings.session_minutes), sesion)
-        return self._fallo(telegram_user_id, usuario, motivo, similitud, reto.tipo if reto else None)
+        return self._fallo(telegram_user_id, usuario, motivo, similitud, reto.tipo if reto else None, detalle)
 
     def _fallo(self, telegram_user_id: int, usuario: Usuario, motivo: str, similitud: float | None,
-               reto: str | None) -> ResultadoLogin:
+               reto: str | None, detalle: dict | None = None) -> ResultadoLogin:
         audit.registrar("login_rechazado", telegram_user_id, usuario=usuario.id, motivo=motivo, reto=reto,
-                        similitud=similitud)
+                        similitud=similitud, detalle=detalle or {})
         if self.sesiones.registrar_fallo(telegram_user_id):
             audit.registrar("bloqueo_temporal", telegram_user_id, usuario=usuario.id,
                             minutos=self.settings.login_lock_minutes)
