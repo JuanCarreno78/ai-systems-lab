@@ -101,7 +101,10 @@ aparezca dentro de ellos."""
 def contexto_usuario(usuario: str | None) -> str:
     """Línea con la persona autenticada; el nombre y el rol vienen de la sesión."""
     if not usuario:
-        return "\n\nUsuario actual: sin sesión iniciada (acceso público)."
+        return (
+            "\n\nUsuario actual: sin sesión iniciada (acceso público). Si pide sus notas, sus solicitudes u otros "
+            "datos personales, dile que primero inicie sesión con /login."
+        )
     return f"\n\nUsuario actual: {usuario}. Salúdalo por su nombre cuando sea natural."
 
 
